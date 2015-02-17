@@ -1,0 +1,10 @@
+div(ng-controller="DocumentReferencePopoverController")
+	div Cross link to:
+
+	a.reference-link(
+		ng-click="templateData.previewReference()"
+		ui-tooltip-content="Click to preview this cross link")
+		| {{templateData.reference.metadata.title || templateData.reference.target}}
+
+	p(ng-if="templateData.reference.metadata.description")
+		| {{templateData.reference.metadata.description}}

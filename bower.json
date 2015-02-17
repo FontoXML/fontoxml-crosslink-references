@@ -1,0 +1,16 @@
+{
+  "name": "fontoxml-references-document",
+  "version": "0.1.0",
+  "description": "Implements generic infrastructure for linking to (part of) another document.",
+  "main": "src/main.js",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "lib",
+    "test"
+  ],
+  "dependencies": {
+    "fontoxml-references": "git@bitbucket.org:liones/fontoxml-references.git#develop"
+  }
+}
