@@ -1,0 +1,36 @@
+{
+	"document-reference-insert-modal": {
+		"steps": [
+			{
+				"type": "modal/DocumentBrowser",
+				"options": {
+					"templateUrl": "fontoxml-ui-asset-browser/ui/document-browser-modal-template.html",
+					"windowClass": "modal-xl"
+				},
+				"data": {
+					"modalTitle": "Insert cross link",
+					"modalSubtitle": "Refer to a piece of content in this or another document",
+					"referenceTargetNodeFilter": "browseDocumentReferenceTargetNodeFilter"
+				}
+			}
+		]
+	},
+	"document-reference-edit-modal": {
+		"steps": [
+			{
+				"type": "modal/DocumentBrowser",
+				"options": {
+					"templateUrl": "fontoxml-ui-asset-browser/ui/document-browser-modal-template.html",
+					"windowClass": "modal-xl"
+				},
+				"data": {
+					"modalTitle": "Edit cross link",
+					"modalSubtitle": "Refer to a piece of content in this or another document",
+					"modalPrimaryButtonLabel": "Save",
+					"referenceTargetNodeFilter": "browseDocumentReferenceTargetNodeFilter",
+					"contextNodeId": "{{contextNodeId}}"
+				}
+			}
+		]
+	}
+}

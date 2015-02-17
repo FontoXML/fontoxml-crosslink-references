@@ -11,6 +11,7 @@
     "test"
   ],
   "dependencies": {
-    "fontoxml-references": "git@bitbucket.org:liones/fontoxml-references.git#develop"
+    "fontoxml-references": "git@bitbucket.org:liones/fontoxml-references.git#develop",
+    "fontoxml-ui-asset-browser": "git@bitbucket.org:liones/fontoxml-ui-asset-browser.git#develop"
   }
 }
