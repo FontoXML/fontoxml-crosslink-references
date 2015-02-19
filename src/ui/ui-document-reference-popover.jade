@@ -1,0 +1,11 @@
+div
+	div Cross link to:
+
+	a.reference-link(
+		ng-click="uiDocumentReferencePopover.uiReferencePopover.previewReference()"
+		ui-tooltip-content="Click to preview this cross link")
+		| {{uiDocumentReferencePopover.uiReferencePopover.reference.metadata.title || uiDocumentReferencePopover.uiReferencePopover.reference.target}}
+
+	p(ng-if="uiDocumentReferencePopover.uiReferencePopover.reference.metadata.description")
+		| {{uiDocumentReferencePopover.uiReferencePopover.reference.metadata.description}}
+

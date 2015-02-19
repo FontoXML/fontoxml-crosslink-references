@@ -4,7 +4,7 @@ define([
 	'fontoxml-references',
 	'fontoxml-references/uiModule',
 
-	'./ui/DocumentReferencePopoverController',
+	'./ui/createUiDocumentReferencePopoverDirective',
 	'./ui/DocumentPreviewModalController',
 ], function (
 	angular,
@@ -12,7 +12,7 @@ define([
 	references,
 	referencesUiModule,
 
-	DocumentReferencePopoverController,
+	createUiDocumentReferencePopoverDirective,
 	DocumentPreviewModalController
 	) {
 	'use strict';
@@ -21,11 +21,11 @@ define([
 			referencesUiModule
 		]);
 
-	module.controller('DocumentReferencePopoverController', DocumentReferencePopoverController);
+	module.directive('uiDocumentReferencePopover', createUiDocumentReferencePopoverDirective);
 	module.controller('DocumentPreviewModalController', DocumentPreviewModalController);
 
 	// Register the template for document references
-	references.referencePopoverContentService.setContentTemplateForReferenceType(
+	references.referencePopoverContentService.setContentTemplateUrlForReferenceType(
 		'document',
 		'fontoxml-references-document/ui/document-reference-popover-content-template.html');
 
