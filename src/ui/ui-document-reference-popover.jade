@@ -2,7 +2,7 @@ div
 	div Cross link to:
 
 	a.reference-link(
-		ng-click="uiDocumentReferencePopover.uiReferencePopover.previewReference()"
+		ng-click="uiDocumentReferencePopover.previewReference()"
 		ui-tooltip-content="Click to preview this cross link")
 		| {{uiDocumentReferencePopover.uiReferencePopover.reference.metadata.title || uiDocumentReferencePopover.uiReferencePopover.reference.target}}
 
