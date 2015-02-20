@@ -24,10 +24,5 @@ define([
 	module.directive('uiDocumentReferencePopover', createUiDocumentReferencePopoverDirective);
 	module.controller('DocumentPreviewModalController', DocumentPreviewModalController);
 
-	// Register the template for document references
-	references.referencePopoverContentService.setContentTemplateUrlForReferenceType(
-		'document',
-		'fontoxml-references-document/ui/document-reference-popover-content-template.html');
-
 	return module.name;
 });
