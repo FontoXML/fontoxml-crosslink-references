@@ -11,6 +11,7 @@
 					"modalTitle": "Insert cross link",
 					"modalSubtitle": "Refer to a piece of content in this or another document",
 					"referenceTargetNodeFilter": "browseDocumentReferenceTargetNodeFilter",
+
 					"referenceTypeName": "document"
 				}
 			}
@@ -29,6 +30,7 @@
 					"modalSubtitle": "Refer to a piece of content in this or another document",
 					"modalPrimaryButtonLabel": "Save",
 					"referenceTargetNodeFilter": "browseDocumentReferenceTargetNodeFilter",
+
 					"contextNodeId": "{{contextNodeId}}",
 					"referenceTypeName": "document"
 				}

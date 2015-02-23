@@ -12,10 +12,6 @@ define([
 			scope: {},
 			require: '^uiReferencePopover',
 			link: function (scope, element, attrs, uiReferencePopoverController) {
-				// TODO: use a generic document edit operation here which has a step which determines the specific
-				// implementation according to the element being edited.
-				uiReferencePopoverController.setEditOperationName('xref-dita-edit');
-
 				scope.uiDocumentReferencePopover = {
 					uiReferencePopover: uiReferencePopoverController,
 
