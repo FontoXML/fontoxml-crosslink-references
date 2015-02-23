@@ -1,5 +1,5 @@
 {
-	"document-reference-insert-modal": {
+	"reference-document-insert-modal": {
 		"steps": [
 			{
 				"type": "modal/DocumentBrowser",
@@ -15,7 +15,7 @@
 			}
 		]
 	},
-	"document-reference-edit-modal": {
+	"reference-document-edit-modal": {
 		"steps": [
 			{
 				"type": "modal/DocumentBrowser",
