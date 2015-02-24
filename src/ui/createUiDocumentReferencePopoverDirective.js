@@ -9,10 +9,17 @@ define([
 		return {
 			restrict: 'E',
 			templateUrl: require.toUrl('fontoxml-references-document/ui/ui-document-reference-popover.html'),
-			scope: {},
+			scope: {
+				linkDescription: '@',
+				previewTooltip: '@'
+			},
 			require: '^uiReferencePopover',
 			link: function (scope, element, attrs, uiReferencePopoverController) {
 				scope.uiDocumentReferencePopover = {
+					// Preparing for bindToController style directive, but there isn't a controller yet
+					linkDescription: scope.linkDescription,
+					previewTooltip: scope.previewTooltip,
+
 					uiReferencePopover: uiReferencePopoverController,
 
 					previewReference: function () {

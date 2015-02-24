@@ -1,9 +1,9 @@
 div
-	div Cross link to:
+	div {{uiDocumentReferencePopover.linkDescription || 'Cross link to:'}}
 
 	a.reference-link(
 		ng-click="uiDocumentReferencePopover.previewReference()"
-		ui-tooltip-content="Click to preview this cross link")
+		ui-tooltip-content="{{uiDocumentReferencePopover.previewTooltip || 'Click to preview this cross link'}}")
 		| {{uiDocumentReferencePopover.uiReferencePopover.reference.metadata.title || uiDocumentReferencePopover.uiReferencePopover.reference.target}}
 
 	p(ng-if="uiDocumentReferencePopover.uiReferencePopover.reference.metadata.description")
