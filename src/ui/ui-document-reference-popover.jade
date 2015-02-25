@@ -4,8 +4,8 @@ div
 	a.reference-link(
 		ng-click="uiDocumentReferencePopover.previewReference()"
 		ui-tooltip-content="{{uiDocumentReferencePopover.previewTooltip || 'Click to preview this cross link'}}")
-		| {{uiDocumentReferencePopover.uiReferencePopover.reference.metadata.title || uiDocumentReferencePopover.uiReferencePopover.reference.target}}
+		| {{uiReferencePopover.reference.metadata.title || uiReferencePopover.reference.target}}
 
-	p(ng-if="uiDocumentReferencePopover.uiReferencePopover.reference.metadata.description")
-		| {{uiDocumentReferencePopover.uiReferencePopover.reference.metadata.description}}
+	p(ng-if="uiReferencePopover.reference.metadata.description")
+		| {{uiReferencePopover.reference.metadata.description}}
 

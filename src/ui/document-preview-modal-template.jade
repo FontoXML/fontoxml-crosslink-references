@@ -1,35 +1,15 @@
 ui-modal(
 	id="preview-document-modal"
-	ng-keyup="$event.keyCode === 13 && close()")
+	ng-keyup="$event.keyCode === 13 && uiDocumentPreviewModal.close()")
 	ui-modal-header(
 		title="Preview link"
 		icon="link")
 
-	ui-modal-body(is-ui-region-root-row)
-		//-- NOTE: copied from fontoxml-ui-asset-previews/ui/ui-document-preview-template.jade
-		//-- TODO: extract common functionality?
-		ui-region-column
-			ui-region-content
-				document-placeholder(document-reference="documentReference")
-					.content-view(ng-if="documentReadyState !== 'loaded'")
-						.dita-element-family--topic(ready-state="{{documentReadyState}}")
-							.ready-state-info(ng-switch="documentReadyState")
-								span(ng-switch-when="loading")
-									| Loading document…
-
-								span(ng-switch-when="error")
-									//- Not yet implemented
-									| This document could not be loaded.
-
-								span(ng-switch-when="waiting")
-									| This document has not been opened.
-									//- Then why keep waiting?
-
-					templated-view.content-view.content-preview(
-						ng-if="documentReadyState === 'loaded'",
-						ready-state="loaded",
-						document-id="{{documentReference.documentId}}",
-						stylesheet-name="content")
+	ui-modal-body(is-ui-region-root-column)
+		ui-region-row(size="1")
+			ui-document-preview(
+				reference="uiDocumentPreviewModal.reference"
+				target-spec="uiDocumentPreviewModal.targetSpec")
 
 	ui-modal-footer
 		ui-button-bar
@@ -37,4 +17,4 @@ ui-modal(
 				ui-button(
 					type="primary"
 					label="Close"
-					click="close()")
+					click="uiDocumentPreviewModal.close()")

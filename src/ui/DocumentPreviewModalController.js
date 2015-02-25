@@ -1,23 +1,14 @@
 define([
-	'editor'
-], function (
-	editor
-	) {
+
+], function () {
 	'use strict';
 
-	return /* @ngInject */ function DocumentPreviewModalController ($scope, $modalInstance, documentRemoteId, bufferDigest) {
-		// Load the document
-		editor.loadDocumentForPreview(documentRemoteId)
-			.then(function (documentId) {
-				bufferDigest(function () {
-					$scope.documentReference = {
-						documentId: documentId
-					};
-				});
-			});
+	return /* @ngInject */ function DocumentPreviewModalController ($scope, $modalInstance, reference) {
+		$scope.uiDocumentPreviewModal = {
+			reference: reference,
+			targetSpec: {},
 
-		$scope.close = function () {
-			$modalInstance.dismiss();
+			close: $modalInstance.dismiss
 		};
 	};
 });
