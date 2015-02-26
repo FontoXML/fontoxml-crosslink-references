@@ -5,11 +5,10 @@ ui-modal(
 		title="Preview link"
 		icon="link")
 
-	ui-modal-body(is-ui-region-root-column)
-		ui-region-row(size="1")
-			ui-document-preview(
-				reference="uiDocumentPreviewModal.reference"
-				target-spec="uiDocumentPreviewModal.targetSpec")
+	ui-modal-body
+		ui-document-preview(
+			reference="uiDocumentPreviewModal.reference"
+			target-spec="uiDocumentPreviewModal.targetSpec")
 
 	ui-modal-footer
 		ui-button-bar
