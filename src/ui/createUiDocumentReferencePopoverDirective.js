@@ -12,7 +12,8 @@ define([
 	UiDocumentReferencePopoverController.prototype.previewReference = function () {
 		this.$scope.uiReferencePopover.hidePopover();
 
-		var reference = this.$scope.uiReferencePopover.reference;
+		var reference = this.$scope.uiReferencePopover.reference,
+			referrerDocumentId = this.$scope.uiReferencePopover.referrerDocumentId;
 
 		editor.openModal({
 			controller: 'DocumentPreviewModalController',
@@ -20,6 +21,9 @@ define([
 			resolve: {
 				reference: function () {
 					return reference;
+				},
+				referrerDocumentId: function () {
+					return referrerDocumentId;
 				}
 			}
 		});
