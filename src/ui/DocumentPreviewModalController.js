@@ -7,7 +7,7 @@ define([
 		$scope.uiDocumentPreviewModal = {
 			reference: reference,
 			referrerDocumentId: referrerDocumentId,
-			targetSpec: {},
+			targetSpec: null,
 
 			close: $modalInstance.dismiss
 		};
