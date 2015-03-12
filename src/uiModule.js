@@ -4,6 +4,11 @@ define([
 	'fontoxml-references',
 	'fontoxml-references/uiModule',
 
+	'fontoxml-ui-asset-browser/uiModule',
+	'fontoxml-ui-buttons/uiModule',
+	'fontoxml-ui-modal/uiModule',
+	'fontoxml-ui-previews/uiModule',
+
 	'./ui/createUiDocumentReferencePopoverDirective',
 	'./ui/DocumentPreviewModalController',
 ], function (
@@ -12,13 +17,23 @@ define([
 	references,
 	referencesUiModule,
 
+	uiAssetBrowserUiModule,
+	uiButtonsUiModule,
+	uiModalUiModule,
+	uiPreviewsUiModule,
+
 	createUiDocumentReferencePopoverDirective,
 	DocumentPreviewModalController
 	) {
 	'use strict';
 
 	var module = angular.module('fontoxml-references-document', [
-			referencesUiModule
+			referencesUiModule,
+
+			uiAssetBrowserUiModule,
+			uiButtonsUiModule,
+			uiModalUiModule,
+			uiPreviewsUiModule
 		]);
 
 	module.directive('uiDocumentReferencePopover', createUiDocumentReferencePopoverDirective);
@@ -26,3 +41,4 @@ define([
 
 	return module.name;
 });
+
