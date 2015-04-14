@@ -1,8 +1,8 @@
 define([
-	'editor'
+	'fontoxml-ui-modal/modalManager'
 ], function (
-	editor
-) {
+	modalManager
+	) {
 	'use strict';
 
 	/* @ngInject */ function UiDocumentReferencePopoverController ($scope) {
@@ -15,7 +15,7 @@ define([
 		var reference = this.$scope.uiReferencePopover.reference,
 			referrerDocumentId = this.$scope.uiReferencePopover.referrerDocumentId;
 
-		editor.openModal({
+		modalManager.openModal({
 			controller: 'DocumentPreviewModalController',
 			templateUrl: require.toUrl('fontoxml-references-document/ui/document-preview-modal-template.html'),
 			resolve: {
