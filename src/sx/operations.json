@@ -1,8 +1,5 @@
 {
 	"reference-document-insert-modal": {
-		"flags": [
-			"exclude-from-operations-list"
-		],
 		"steps": [
 			{
 				"type": "modal/DocumentBrowser",
@@ -21,9 +18,6 @@
 		]
 	},
 	"reference-document-edit-modal": {
-		"flags": [
-			"exclude-from-operations-list"
-		],
 		"steps": [
 			{
 				"type": "modal/DocumentBrowser",
