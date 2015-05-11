@@ -12,8 +12,8 @@
   ],
   "dependencies": {
     "fontoxml-references": "git@bitbucket.org:liones/fontoxml-references.git#develop",
-    "fontoxml-modular-schema-experience": "git@bitbucket.org:liones/fontoxml-modular-schema-experience.git#develop",
     "fontoxml-modular-ui": "git@bitbucket.org:liones/fontoxml-modular-ui.git#develop",
+    "fontoxml-operations": "git@bitbucket.org:liones/fontoxml-operations.git#develop",
     "fontoxml-ui-asset-browser": "git@bitbucket.org:liones/fontoxml-ui-asset-browser.git#develop",
     "fontoxml-ui-buttons": "git@bitbucket.org:liones/fontoxml-ui-buttons.git#develop",
     "fontoxml-ui-modal": "git@bitbucket.org:liones/fontoxml-ui-modal.git#develop",
