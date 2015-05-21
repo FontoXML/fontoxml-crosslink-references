@@ -9,7 +9,7 @@
 				},
 				"data": {
 					"modalTitle": "Insert cross link",
-					"modalSubtitle": "Refer to a piece of content in this or another document",
+					"modalSubtitle": "Select the content you want this cross link to refer to",
 					"referenceTargetNodeFilter": "browseDocumentReferenceTargetNodeFilter",
 
 					"referenceTypeName": "document"
@@ -27,7 +27,7 @@
 				},
 				"data": {
 					"modalTitle": "Edit cross link",
-					"modalSubtitle": "Refer to a piece of content in this or another document",
+					"modalSubtitle": "Select the content you want this cross link to refer to",
 					"modalPrimaryButtonLabel": "Save",
 					"referenceTargetNodeFilter": "browseDocumentReferenceTargetNodeFilter",
 
