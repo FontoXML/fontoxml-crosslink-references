@@ -1,6 +1,7 @@
 ui-modal(
 	id="preview-document-modal"
-	ng-keyup="$event.keyCode === 13 && uiDocumentPreviewModal.close()")
+	on-enter-key="uiDocumentPreviewModal.close()"
+	on-escape-key="uiDocumentPreviewModal.close()")
 	ui-modal-header(
 		title="Preview link"
 		icon="link")
