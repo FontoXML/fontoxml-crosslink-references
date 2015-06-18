@@ -10,7 +10,6 @@
 				"data": {
 					"modalTitle": "Select content",
 					"modalSubtitle": "The cross link will refer to this content",
-					"referenceTargetNodeFilter": "browseDocumentReferenceTargetNodeFilter",
 
 					"referenceTypeName": "document"
 				}
@@ -29,7 +28,6 @@
 					"modalTitle": "Edit cross link",
 					"modalSubtitle": "Select the content you want this cross link to refer to",
 					"modalPrimaryButtonLabel": "Save",
-					"referenceTargetNodeFilter": "browseDocumentReferenceTargetNodeFilter",
 
 					"contextNodeId": "{{contextNodeId}}",
 					"referenceTypeName": "document"
