@@ -2,16 +2,10 @@
 	"reference-document-insert-modal": {
 		"steps": [
 			{
-				"type": "modal/DocumentBrowser",
-				"options": {
-					"templateUrl": "fontoxml-ui-asset-browser/ui/document-browser-modal-template.html",
-					"windowClass": "modal-xl"
-				},
+				"type": "operation/open-document-browser",
 				"data": {
 					"modalTitle": "Cross link",
-					"modalSubtitle": "The cross link will refer to this content",
-
-					"referenceTypeName": "document"
+					"modalSubtitle": "The cross link will refer to this content"
 				}
 			}
 		]
@@ -19,18 +13,12 @@
 	"reference-document-edit-modal": {
 		"steps": [
 			{
-				"type": "modal/DocumentBrowser",
-				"options": {
-					"templateUrl": "fontoxml-ui-asset-browser/ui/document-browser-modal-template.html",
-					"windowClass": "modal-xl"
-				},
+				"type": "operation/open-document-browser",
 				"data": {
 					"modalTitle": "Edit cross link",
 					"modalSubtitle": "Select the content you want this cross link to refer to",
 					"modalPrimaryButtonLabel": "Save",
-
-					"contextNodeId": "{{contextNodeId}}",
-					"referenceTypeName": "document"
+					"contextNodeId": "{{contextNodeId}}"
 				}
 			}
 		]
