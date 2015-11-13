@@ -1,6 +1,6 @@
 {
   "name": "fontoxml-references-document",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Implements generic infrastructure for linking to (part of) another document.",
   "main": "src/main.js",
   "private": true,
@@ -11,12 +11,12 @@
     "test"
   ],
   "dependencies": {
-    "fontoxml-references": "git@bitbucket.org:liones/fontoxml-references.git#develop",
+    "fontoxml-references": "git@bitbucket.org:liones/fontoxml-references.git#^1.0.0",
     "fontoxml-modular-ui": "git@bitbucket.org:liones/fontoxml-modular-ui.git#^1.0.0",
-    "fontoxml-operations": "git@bitbucket.org:liones/fontoxml-operations.git#develop",
-    "fontoxml-ui-asset-browser": "git@bitbucket.org:liones/fontoxml-ui-asset-browser.git#develop",
-    "fontoxml-ui-buttons": "git@bitbucket.org:liones/fontoxml-ui-buttons.git#develop",
-    "fontoxml-ui-modal": "git@bitbucket.org:liones/fontoxml-ui-modal.git#develop",
-    "fontoxml-ui-previews": "git@bitbucket.org:liones/fontoxml-ui-previews.git#develop"
+    "fontoxml-operations": "git@bitbucket.org:liones/fontoxml-operations.git#^1.0.0",
+    "fontoxml-ui-asset-browser": "git@bitbucket.org:liones/fontoxml-ui-asset-browser.git#^1.0.0",
+    "fontoxml-ui-buttons": "git@bitbucket.org:liones/fontoxml-ui-buttons.git#^1.0.0",
+    "fontoxml-ui-modal": "git@bitbucket.org:liones/fontoxml-ui-modal.git#^1.0.0",
+    "fontoxml-ui-previews": "git@bitbucket.org:liones/fontoxml-ui-previews.git#^1.0.0"
   }
 }
