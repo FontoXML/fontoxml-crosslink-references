@@ -1,6 +1,6 @@
 {
   "name": "fontoxml-references-document",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Implements generic infrastructure for linking to (part of) another document.",
   "main": "src/main.js",
   "private": true,

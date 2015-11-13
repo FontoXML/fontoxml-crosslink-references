@@ -5,7 +5,7 @@ define([
 	'./ui/createUiDocumentReferencePopoverDirective',
 	'./ui/DocumentPreviewModalController',
 
-	'text!./sx/operations.json'
+	'json!./sx/operations.json'
 ], function (
 	uiManager,
 	operationsManager,
@@ -21,6 +21,6 @@ define([
 		uiManager.addDirective('uiDocumentReferencePopover', createUiDocumentReferencePopoverDirective);
 		uiManager.addController('DocumentPreviewModalController', DocumentPreviewModalController);
 
-		operationsManager.addOperations(JSON.parse(operationsJson));
+		operationsManager.addOperations(operationsJson);
 	};
 });
