@@ -1,0 +1,12 @@
+{
+	"dependencies": {
+		"fontoxml-references": "^1.0.0",
+		"fontoxml-modular-ui": "^1.0.0",
+		"fontoxml-operations": "^1.0.0",
+		"fontoxml-ui-asset-browser": "^1.0.0",
+		"fontoxml-ui-buttons": "^1.0.0",
+		"fontoxml-ui-modal": "^1.0.0",
+		"fontoxml-ui-previews": "^1.0.0"
+	},
+	"devDependencies": {}
+}
