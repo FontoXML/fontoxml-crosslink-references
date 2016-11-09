@@ -1,11 +1,45 @@
-div
-	div {{uiDocumentReferencePopover.linkDescription || 'Cross link to:'}}
+// Document references still loading the target
+div(ng-if="uiDocumentReferencePopover.wasResolved === null")
+	.alert.alert--info(ready-state="loading") Loading…
 
-	a.reference-link(
-		ng-click="uiDocumentReferencePopover.previewReference()"
-		ui-tooltip-content="{{uiDocumentReferencePopover.previewTooltip || 'Click to preview this cross link'}}")
-		| {{uiReferencePopover.reference.metadata.title || uiReferencePopover.reference.target}}
+// Document references whose target could not be found
+div(ng-if="uiDocumentReferencePopover.wasResolved === false")
+	.alert.alert--info(ready-state="error") The target of this link could not be found.
 
-	p(ng-if="uiReferencePopover.reference.metadata.description")
-		| {{uiReferencePopover.reference.metadata.description}}
+// Document references whose target has been checked out
+div(ng-if="uiDocumentReferencePopover.wasResolved === true")
+	div.reference-caption {{uiDocumentReferencePopover.linkDescription || 'Cross link to the ' + uiDocumentReferencePopover.markupLabel +':'}}
+
+	// Document references that have title- or text content that we can show.
+	div.reference-text(ng-if="uiDocumentReferencePopover.getTextRepresentation() && uiDocumentReferencePopover.isQuotedFromContent()")
+		span.reference-quote {{uiDocumentReferencePopover.getTextRepresentation()}}
+
+		span &nbsp;
+
+		a.reference-link(
+			ng-click="uiDocumentReferencePopover.previewReference()"
+			ui-tooltip-content="{{uiDocumentReferencePopover.previewTooltip || 'Click to preview this cross link'}}")
+			| Show more
+
+	// Document references for which the CMS provides title metadata.
+	div.reference-text(ng-if="uiDocumentReferencePopover.getTextRepresentation() && !uiDocumentReferencePopover.isQuotedFromContent()")
+		span {{uiDocumentReferencePopover.getTextRepresentation()}}
+
+		span &nbsp;
+
+		a.reference-link(
+			ng-click="uiDocumentReferencePopover.previewReference()"
+			ui-tooltip-content="{{uiDocumentReferencePopover.previewTooltip || 'Click to preview this cross link'}}")
+			| Show more
+
+	// Document references that do not have any text to show.
+	div(ng-if="!uiDocumentReferencePopover.getTextRepresentation()")
+		span This {{uiDocumentReferencePopover.markuplabel}} does not contain any textual content.
+
+		span &nbsp;
+
+		a.reference-link(
+			ng-click="uiDocumentReferencePopover.previewReference()"
+			ui-tooltip-content="{{uiDocumentReferencePopover.previewTooltip || 'Click to preview this cross link'}}")
+			| Show preview
 
