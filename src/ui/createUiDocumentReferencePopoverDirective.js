@@ -29,15 +29,15 @@ define([
 	function transformReferenceToTargetSpec (uiDocumentReferencePopover, reference, referrerDocumentId) {
 		return referencesManager.transformReferenceToTargetSpec(reference, referrerDocumentId)
 			.then(function (targetSpec) {
-				var targetNode = documentsManager.getNodeById(targetSpec.nodeId, targetSpec.documentId),
-					textContent = getTextContent(targetNode);
+				var targetNode = documentsManager.getNodeById(targetSpec.nodeId, targetSpec.documentId);
 
 				return new Promise(function (resolve) {
 					uiDocumentReferencePopover.$scope.$applyAsync(function () {
+						var textContent = getTextContent(targetNode);
+
 						uiDocumentReferencePopover.wasResolved = true;
 						uiDocumentReferencePopover.markupLabel = getMarkupLabel(targetNode) || targetNode.nodeName;
 						uiDocumentReferencePopover.titleContent = getTitleContent(targetNode);
-						uiDocumentReferencePopover.textContent = getTextContent(targetNode);
 						uiDocumentReferencePopover.textContent = textContent.length > TEXT_CONTENT_TRUNCATE_LENGTH
 							? textContent.substr(0, TEXT_CONTENT_TRUNCATE_LENGTH - 1) + '…'
 							: textContent;
