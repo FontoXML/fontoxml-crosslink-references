@@ -4,14 +4,16 @@ define([
 	'fontoxml-markup-documentation/getTitleContent',
 	'fontoxml-dom-utils/domQuery',
 	'fontoxml-ui-modal/modalManager',
-	'fontoxml-references/referencesManager'
+	'fontoxml-references/referencesManager',
+	'fontoxml-utils/truncator'
 ], function (
 	documentsManager,
 	getMarkupLabel,
 	getTitleContent,
 	domQuery,
 	modalManager,
-	referencesManager
+	referencesManager,
+	truncator
 	) {
 	'use strict';
 
@@ -38,10 +40,11 @@ define([
 						uiDocumentReferencePopover.wasResolved = true;
 						uiDocumentReferencePopover.markupLabel = getMarkupLabel(targetNode) || targetNode.nodeName;
 						uiDocumentReferencePopover.titleContent = getTitleContent(targetNode);
-						uiDocumentReferencePopover.textContent = textContent.length > TEXT_CONTENT_TRUNCATE_LENGTH
-							? textContent.substr(0, TEXT_CONTENT_TRUNCATE_LENGTH - 1) + '…'
-							: textContent;
-
+						uiDocumentReferencePopover.textContent = truncator.truncateRight(
+							textContent,
+							TEXT_CONTENT_TRUNCATE_LENGTH,
+							false // Do not respect word boundaries to avoid truncation bug, see also FXC-1546
+						);
 						resolve();
 					})
 				});

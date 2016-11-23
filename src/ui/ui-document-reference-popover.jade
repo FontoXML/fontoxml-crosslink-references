@@ -11,19 +11,9 @@ div(ng-if="uiDocumentReferencePopover.wasResolved === true")
 	div.reference-caption {{uiDocumentReferencePopover.linkDescription || 'Cross link to the ' + uiDocumentReferencePopover.markupLabel +':'}}
 
 	// Document references that have title- or text content that we can show.
-	div.reference-text(ng-if="uiDocumentReferencePopover.getTextRepresentation() && uiDocumentReferencePopover.isQuotedFromContent()")
-		span.reference-quote {{uiDocumentReferencePopover.getTextRepresentation()}}
-
-		span &nbsp;
-
-		a.reference-link(
-			ng-click="uiDocumentReferencePopover.previewReference()"
-			ui-tooltip-content="{{uiDocumentReferencePopover.previewTooltip || 'Click to preview this cross link'}}")
-			| Show more
-
-	// Document references for which the CMS provides title metadata.
-	div.reference-text(ng-if="uiDocumentReferencePopover.getTextRepresentation() && !uiDocumentReferencePopover.isQuotedFromContent()")
-		span {{uiDocumentReferencePopover.getTextRepresentation()}}
+	div.reference-text(ng-if="uiDocumentReferencePopover.getTextRepresentation()")
+		span(ng-class="{'reference-quote': uiDocumentReferencePopover.isQuotedFromContent() }")
+			| {{uiDocumentReferencePopover.getTextRepresentation()}}
 
 		span &nbsp;
 
