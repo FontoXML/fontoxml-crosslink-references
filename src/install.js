@@ -1,26 +1,18 @@
 define([
 	'fontoxml-modular-ui/uiManager',
-	'fontoxml-operations/operationsManager',
 
 	'./ui/createUiDocumentReferencePopoverDirective',
-	'./ui/DocumentPreviewModalController',
-
-	'json!./sx/operations.json'
+	'./ui/DocumentPreviewModalController'
 ], function (
 	uiManager,
-	operationsManager,
 
 	createUiDocumentReferencePopoverDirective,
-	DocumentPreviewModalController,
-
-	operationsJson
-	) {
+	DocumentPreviewModalController
+) {
 	'use strict';
 
 	return function install () {
 		uiManager.addDirective('uiDocumentReferencePopover', createUiDocumentReferencePopoverDirective);
 		uiManager.addController('DocumentPreviewModalController', DocumentPreviewModalController);
-
-		operationsManager.addOperations(operationsJson);
 	};
 });
