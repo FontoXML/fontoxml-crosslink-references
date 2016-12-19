@@ -31,7 +31,9 @@ define([
 	function transformReferenceToTargetSpec (uiDocumentReferencePopover, reference, referrerDocumentId) {
 		return referencesManager.transformReferenceToTargetSpec(reference, referrerDocumentId)
 			.then(function (targetSpec) {
-				var targetNode = documentsManager.getNodeById(targetSpec.nodeId, targetSpec.documentId);
+				var targetNode = targetSpec.nodeId ?
+						documentsManager.getNodeById(targetSpec.nodeId, targetSpec.documentId) :
+						documentsManager.getDocumentNode(targetSpec.documentId).documentElement;
 
 				return new Promise(function (resolve) {
 					uiDocumentReferencePopover.$scope.$applyAsync(function () {
