@@ -28,7 +28,7 @@ export default function NodePreviewModal () {
 			/>
 			<ModalBody paddingSize='l'>
 				<ModalContent>
-					<Container applyCss={ { overflow: 'auto' } }>
+					<Container applyCss={ { overflow: 'auto', width: '100%' } }>
 						<FxNodePreview
 							nodeId={ operationData.documentNodeId }
 							highlightNodeId={ operationData.highlightNodeId }
