@@ -3,17 +3,17 @@ define([
 	'fontoxml-markup-documentation/getMarkupLabel',
 	'fontoxml-markup-documentation/getTitleContent',
 	'fontoxml-dom-utils/domQuery',
-	'fontoxml-ui-modal/modalManager',
 	'fontoxml-references/referencesManager',
-	'fontoxml-utils/truncator'
+	'fontoxml-utils/truncator',
+	'fontoxml-operations/operationsManager'
 ], function (
 	documentsManager,
 	getMarkupLabel,
 	getTitleContent,
 	domQuery,
-	modalManager,
 	referencesManager,
-	truncator
+	truncator,
+	operationsManager
 	) {
 	'use strict';
 
@@ -75,17 +75,9 @@ define([
 		var reference = this.$scope.uiReferencePopover.reference,
 			referrerDocumentId = this.$scope.uiReferencePopover.referrerDocumentId;
 
-		modalManager.openModal({
-			controller: 'DocumentPreviewModalController',
-			templateUrl: require.toUrl('fontoxml-references-document/ui/document-preview-modal-template.html'),
-			resolve: {
-				reference: function () {
-					return reference;
-				},
-				referrerDocumentId: function () {
-					return referrerDocumentId;
-				}
-			}
+		operationsManager.executeOperation('open-node-preview-modal-for-reference', {
+			reference: reference,
+			referrerDocumentId: referrerDocumentId
 		});
 	};
 

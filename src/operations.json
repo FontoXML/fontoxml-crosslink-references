@@ -22,5 +22,53 @@
 				}
 			}
 		]
+	},
+	"open-node-preview-modal": {
+		"initialData": {
+			"modalTitle": "t__Preview",
+			"modalIcon": null,
+			"modalCancelButtonLabel": "t__Close"
+		},
+		"getStateSteps": [],
+		"steps": {
+			"type": "modal/NodePreviewModal",
+			"options": {
+				"controller": "NodePreviewModalBridgeController",
+				"templateUrl": "fontoxml-references-document/bridge/node-preview-modal-bridge-template.html"
+			},
+			"data": {
+				"contextNodeId": "{{contextNodeId}}",
+				"highlightNodeId": "{{highlightNodeId}}"
+			}
+		}
+	},
+	"open-node-preview-modal-for-reference": {
+		"initialData": {
+			"modalTitle": "t__Preview link",
+			"modalIcon": "link"
+		},
+		"getStateSteps": [],
+		"steps": [
+			{
+				"type": "transform/setTargetNodeIdForDocumentReference",
+				"data": {
+					"reference": "{{reference}}",
+					"referrerDocumentId": "{{referrerDocumentId}}"
+				}
+			},
+			{
+				"type": "transform/setDocumentNodeIdForContextNodeId",
+				"data": {
+					"contextNodeId": "{{targetNodeId}}"
+				}
+			},
+			{
+				"type": "operation/open-node-preview-modal",
+				"data": {
+					"contextNodeId": "{{documentNodeId}}",
+					"highlightNodeId": "{{targetNodeId}}"
+				}
+			}
+		]
 	}
 }
