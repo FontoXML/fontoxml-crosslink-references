@@ -1,18 +1,15 @@
 define([
 	'fontoxml-modular-ui/uiManager',
 
-	'./ui/createUiDocumentReferencePopoverDirective',
-	'./ui/DocumentPreviewModalController'
+	'./ui/DocumentPreviewModal.jsx'
 ], function (
 	uiManager,
 
-	createUiDocumentReferencePopoverDirective,
-	DocumentPreviewModalController
+	DocumentPreviewModal
 ) {
 	'use strict';
 
 	return function install () {
-		uiManager.addDirective('uiDocumentReferencePopover', createUiDocumentReferencePopoverDirective);
-		uiManager.addController('DocumentPreviewModalController', DocumentPreviewModalController);
+		uiManager.registerReactComponent('DocumentPreviewModal', DocumentPreviewModal);
 	};
 });

@@ -1,25 +1,8 @@
 {
-	"reference-document-insert-modal": {
+	"open-document-preview-modal": {
 		"steps": [
 			{
-				"type": "operation/open-document-browser",
-				"data": {
-					"modalTitle": "Cross link",
-					"modalSubtitle": "The cross link will refer to this content"
-				}
-			}
-		]
-	},
-	"reference-document-edit-modal": {
-		"steps": [
-			{
-				"type": "operation/open-document-browser",
-				"data": {
-					"modalTitle": "Edit cross link",
-					"modalSubtitle": "Select the content you want this cross link to refer to",
-					"modalPrimaryButtonLabel": "Save",
-					"contextNodeId": "{{contextNodeId}}"
-				}
+				"type": "modal/DocumentPreviewModal"
 			}
 		]
 	}
