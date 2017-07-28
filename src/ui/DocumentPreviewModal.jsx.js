@@ -18,7 +18,7 @@ import {
 
 import { scrollContainer } from 'fontoxml-vendor-fds/system';
 
-const modalTitleDefault = t('Preview document');
+const modalTitleDefault = t('Preview link');
 const closeButtonLabel = t('Close');
 
 const scrollContainerStyles = scrollContainer('s');
