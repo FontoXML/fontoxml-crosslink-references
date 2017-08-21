@@ -14,7 +14,6 @@ import { PopoverBody, Text, TextLink } from 'fontoxml-vendor-fds/components';
 
 const TEXT_CONTENT_TRUNCATE_LENGTH = 140;
 
-const crossLinkToLabel = t('Cross link to the ');
 const showMoreLabel = t('Show more');
 const showPreviewLabel = t('Show preview');
 const noTextualRepresentationLabel = markupLabel =>
@@ -75,7 +74,7 @@ class FxCrossReferencePopover extends Component {
 		return (
 			<PopoverBody>
 				<Text colorName="text-muted-color">
-					{crossLinkToLabel + referenceTextLabels.markupLabel + ':'}
+				{ t('Cross link to the {REFERENCE_MARKUP_LABEL}:', { REFERENCE_MARKUP_LABEL: referenceTextLabels.markupLabel }) }
 				</Text>
 
 				<Text>
