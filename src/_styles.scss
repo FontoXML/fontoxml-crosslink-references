@@ -1,8 +1,0 @@
-@include with-element-highlight('target-element') {
-	background-color: ui-color('selection') !important;
-
-	.highlight-overlay {
-		background-color: ui-color('selection');
-		opacity: 0.7;
-	}
-}
