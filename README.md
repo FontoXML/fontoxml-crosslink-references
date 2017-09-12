@@ -1,5 +1,4 @@
-FontoXML/references-document
-----------------------------
+# fontoxml-crosslink-references
 
-Implements generic infrastructure for linking to (part of) another document.
+Provides a library of UI components for cross-document references
 

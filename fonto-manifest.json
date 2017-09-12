@@ -1,7 +1,5 @@
 {
 	"dependencies": {
-		"fontoxml-references": "^1.0.0",
-		"fontoxml-modular-ui": "^2.0.0",
-		"fontoxml-operations": "^1.0.0"
+		"fontoxml-platform-base": "^2.9.0"
 	}
 }
