@@ -2,8 +2,8 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
 import documentsManager from 'fontoxml-documents/documentsManager';
-import FxTemplatedView from 'fontoxml-templated-views/FxTemplatedView.jsx';
 import nodeHighlightManager from 'fontoxml-focus-highlight-view/nodeHighlightManager';
+import FxTemplatedView from 'fontoxml-fx/FxTemplatedView.jsx';
 import scrollIntoViewManager from 'fontoxml-scroll-into-view/scrollIntoViewManager';
 import t from 'fontoxml-localization/t';
 
