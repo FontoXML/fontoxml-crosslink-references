@@ -20,10 +20,9 @@ const noTextualRepresentationLabel = markupLabel =>
 	t('This {MARKUP_LABEL} does not contain any textual content. ', { MARKUP_LABEL: markupLabel });
 
 const handleOpenPreview = ({ target }) =>
-	operationsManager.executeOperation('open-document-preview-modal', target)
-		.catch(() => {});
+	operationsManager.executeOperation('open-document-preview-modal', target).catch(() => {});
 
-const determineReferenceTextLabels = ({ target, metadata}) => {
+const determineReferenceTextLabels = ({ target, metadata }) => {
 	const targetNode = target.nodeId
 		? documentsManager.getNodeById(target.nodeId, target.documentId)
 		: documentsManager.getDocumentNode(target.documentId).documentElement;
@@ -38,7 +37,8 @@ const determineReferenceTextLabels = ({ target, metadata}) => {
 	textRepresentation = truncator.truncateRight(
 		textRepresentation,
 		TEXT_CONTENT_TRUNCATE_LENGTH,
-		false // Do not respect word boundaries to avoid truncation bug, see also FXC-1546
+		// Do not respect word boundaries to avoid truncation bug, see also FXC-1546
+		false
 	);
 
 	if (textRepresentation) {
@@ -56,7 +56,7 @@ const determineReferenceTextLabels = ({ target, metadata}) => {
 	};
 };
 
-class FxCrossReferencePopover extends Component {
+class CrossReferencePopover extends Component {
 	static propTypes = {
 		data: PropTypes.shape({
 			contextNodeId: PropTypes.string.isRequired,
@@ -74,7 +74,9 @@ class FxCrossReferencePopover extends Component {
 		return (
 			<PopoverBody>
 				<Text colorName="text-muted-color">
-				{ t('Cross link to the {REFERENCE_MARKUP_LABEL}:', { REFERENCE_MARKUP_LABEL: referenceTextLabels.markupLabel }) }
+					{t('Cross link to the {REFERENCE_MARKUP_LABEL}:', {
+						REFERENCE_MARKUP_LABEL: referenceTextLabels.markupLabel
+					})}
 				</Text>
 
 				<Text>
@@ -97,4 +99,4 @@ class FxCrossReferencePopover extends Component {
 	}
 }
 
-export default FxCrossReferencePopover;
+export default CrossReferencePopover;
