@@ -2,26 +2,22 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
 import documentsManager from 'fontoxml-documents/documentsManager';
+import FxNodePreview from 'fontoxml-fx/FxNodePreview.jsx';
 import nodeHighlightManager from 'fontoxml-focus-highlight-view/nodeHighlightManager';
-import FxTemplatedView from 'fontoxml-fx/FxTemplatedView.jsx';
 import scrollIntoViewManager from 'fontoxml-scroll-into-view/scrollIntoViewManager';
 import t from 'fontoxml-localization/t';
 
 import {
-	Block,
 	Button,
 	Modal,
 	ModalBody,
+	ModalContent,
 	ModalFooter,
 	ModalHeader
 } from 'fontoxml-vendor-fds/components';
 
-import { scrollContainer } from 'fontoxml-vendor-fds/system';
-
 const modalTitleDefault = t('Preview link');
 const closeButtonLabel = t('Close');
-
-const scrollContainerStyles = scrollContainer('s');
 
 class DocumentPreviewModal extends Component {
 	static propTypes = {
@@ -56,19 +52,13 @@ class DocumentPreviewModal extends Component {
 		return (
 			<Modal size="m">
 				<ModalHeader title={modalTitle || modalTitleDefault} icon={modalIcon || ''} />
+
 				<ModalBody>
-					<Block applyCss={scrollContainerStyles} flex="auto">
-						<FxTemplatedView
-							documentId={documentId}
-							flags={{ readonly: true }}
-							mode="preview"
-							overrideMode=""
-							paddingSize={0}
-							stylesheetName="content"
-							viewName="content-preview"
-						/>
-					</Block>
+					<ModalContent flexDirection="column" isScrollContainer>
+						<FxNodePreview documentId={documentId} />
+					</ModalContent>
 				</ModalBody>
+
 				<ModalFooter>
 					<Button label={closeButtonLabel} type="primary" onClick={cancelModal} />
 				</ModalFooter>
