@@ -46,11 +46,17 @@ class DocumentPreviewModal extends Component {
 		}
 	}
 
+	handleKeyDown = event => {
+		if (event.key === 'Escape' || event.key === 'Enter') {
+			this.props.cancelModal();
+		}
+	};
+
 	render() {
 		const { cancelModal, data: { documentId, modalIcon, modalTitle } } = this.props;
 
 		return (
-			<Modal size="m">
+			<Modal size="m" onKeyDown={this.handleKeyDown}>
 				<ModalHeader title={modalTitle || modalTitleDefault} icon={modalIcon || ''} />
 
 				<ModalBody>
