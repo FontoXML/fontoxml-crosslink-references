@@ -1,20 +1,12 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
+import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from 'fds/components';
 import documentsManager from 'fontoxml-documents/documentsManager';
-import FxNodePreview from 'fontoxml-fx/FxNodePreview.jsx';
 import nodeHighlightManager from 'fontoxml-focus-highlight-view/nodeHighlightManager';
-import scrollIntoViewManager from 'fontoxml-scroll-into-view/scrollIntoViewManager';
+import FxNodePreview from 'fontoxml-fx/FxNodePreview.jsx';
 import t from 'fontoxml-localization/t';
-
-import {
-	Button,
-	Modal,
-	ModalBody,
-	ModalContent,
-	ModalFooter,
-	ModalHeader
-} from 'fontoxml-vendor-fds/components';
+import scrollIntoViewManager from 'fontoxml-scroll-into-view/scrollIntoViewManager';
 
 const modalTitleDefault = t('Preview link');
 const closeButtonLabel = t('Close');

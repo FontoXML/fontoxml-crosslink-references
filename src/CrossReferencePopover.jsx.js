@@ -10,7 +10,7 @@ import operationsManager from 'fontoxml-operations/operationsManager';
 import t from 'fontoxml-localization/t';
 import truncator from 'fontoxml-utils/truncator';
 
-import { PopoverBody, Text, TextLink } from 'fontoxml-vendor-fds/components';
+import { PopoverBody, Text, TextLink } from 'fds/components';
 
 const TEXT_CONTENT_TRUNCATE_LENGTH = 140;
 
