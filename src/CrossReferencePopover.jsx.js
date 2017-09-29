@@ -45,7 +45,9 @@ const determineReferenceTextLabels = ({ target, metadata }) => {
 		return {
 			markupLabel: markupLabel,
 			previewLabel: showMoreLabel,
-			textRepresentation: '“' + textRepresentation + '” '
+			textRepresentation: t('“{TEXT_REPRESENTATION}” ', {
+				TEXT_REPRESENTATION: textRepresentation
+			})
 		};
 	}
 
