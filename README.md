@@ -1,6 +1,8 @@
+---
 category: add-on/fontoxml-crosslink-references
+---
 
-# Add-on crosslink references (fontoxml-crosslink-references)
+# Cross references library
 
 This add-on provides a popover and a modal for use with cross-document references.
 
