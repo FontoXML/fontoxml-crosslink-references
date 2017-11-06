@@ -80,7 +80,7 @@ class CrossReferencePopover extends Component {
 			targetQuery: PropTypes.string.isRequired
 		}).isRequired,
 		/**
-		 * This callback will be triggered when the popover is openend or after the permanent id is
+		 * This callback will be triggered when the popover is opened or after the permanent id is
 		 * resolved (if the reference has permanent ids `data.targetIsPermanentId`).
 		 *
 		 * @param {string} target The unresolved target, this is the resolved permanent id or
