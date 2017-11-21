@@ -84,9 +84,11 @@ class CrossReferencePopover extends Component {
 		 * resolved (if the reference has permanent ids `data.targetIsPermanentId`).
 		 *
 		 * @param {string} target The unresolved target, this is the resolved permanent id or
-		 * the outcome of `data.targetQuery`.
+		 *    the outcome of `data.targetQuery`.
 		 *
-		 * @return {Promise.<string|Object>} The resolved target.
+		 * @return {Promise.<{documentId: DocumentId, nodeId: NodeId}>} The resolved target. This
+		 *    should be a promise that resolves into an object. The object should contain a
+		 *    documentId and optional a nodeId.
 		 */
 		resolveReference: PropTypes.func.isRequired
 	};
