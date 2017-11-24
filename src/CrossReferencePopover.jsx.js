@@ -86,9 +86,8 @@ class CrossReferencePopover extends Component {
 		 * @param {string} target The unresolved target, this is the resolved permanent id or
 		 *    the outcome of `data.targetQuery`.
 		 *
-		 * @return {Promise.<{documentId: DocumentId, nodeId: NodeId}>} The resolved target. This
-		 *    should be a promise that resolves into an object. The object should contain a
-		 *    documentId and optional a nodeId.
+		 * @return {Promise.<CrossReferencePopover~returnObject>} The resolved target. This
+		 *    should be a promise that resolves into an object.
 		 */
 		resolveReference: PropTypes.func.isRequired
 	};
@@ -125,6 +124,18 @@ class CrossReferencePopover extends Component {
 }
 
 export default CrossReferencePopover;
+
+/**
+ *
+ * @typedef   {Object}  returnObject
+ * @memberof  CrossReferencePopover
+ * @inner
+ *
+ * @property  {DocumentId} documentId The document ID of the document that is referenced
+ * @property  {NodeId}     [nodeId]   The node ID of the node that is referenced
+ *
+ * @fontosdk  members
+ */
 
 /**
  * The popoverData as provided by the family configuration, this only needs to be passed through.
