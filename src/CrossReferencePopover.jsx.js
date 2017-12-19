@@ -1,13 +1,13 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
+import readOnlyBlueprint from 'fontoxml-blueprints/readOnlyBlueprint';
 import documentsManager from 'fontoxml-documents/documentsManager';
 import domQuery from 'fontoxml-dom-utils/domQuery';
 import FxReferencePopover from 'fontoxml-fx/FxReferencePopover.jsx';
-import getMarkupLabel from 'fontoxml-markup-documentation/getMarkupLabel';
-import getTitleContent from 'fontoxml-markup-documentation/getTitleContent';
-import operationsManager from 'fontoxml-operations/operationsManager';
 import t from 'fontoxml-localization/t';
+import operationsManager from 'fontoxml-operations/operationsManager';
+import evaluateXpathToString from 'fontoxml-selectors/evaluateXPathToString';
 
 import { PopoverBody, Text, TextLink } from 'fds/components';
 
@@ -26,14 +26,21 @@ const determineReferenceTextLabels = ({ target, metadata }) => {
 		? documentsManager.getNodeById(target.nodeId, target.documentId)
 		: documentsManager.getDocumentNode(target.documentId).documentElement;
 
-	const markupLabel = getMarkupLabel(targetNode) || targetNode.nodeName;
-	let textRepresentation = (metadata && metadata.title) || getTitleContent(targetNode);
+	const markupLabel =
+		evaluateXpathToString('fonto:markup-label(.)', targetNode, readOnlyBlueprint) ||
+		targetNode.nodeName;
+	let textRepresentation =
+		(metadata && metadata.title) ||
+		evaluateXpathToString('fonto:title-content(.)', targetNode, readOnlyBlueprint);
 
 	if (!textRepresentation) {
 		textRepresentation = domQuery.getTextContent(targetNode);
 	}
 
-	textRepresentation = textRepresentation.substr(0, TEXT_CONTENT_TRUNCATE_LENGTH - 1) + '…';
+	textRepresentation =
+		textRepresentation.length <= TEXT_CONTENT_TRUNCATE_LENGTH
+			? textRepresentation
+			: textRepresentation.substr(0, TEXT_CONTENT_TRUNCATE_LENGTH - 1) + '…';
 
 	if (textRepresentation) {
 		return {
