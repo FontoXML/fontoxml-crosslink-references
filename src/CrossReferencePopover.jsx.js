@@ -8,7 +8,6 @@ import getMarkupLabel from 'fontoxml-markup-documentation/getMarkupLabel';
 import getTitleContent from 'fontoxml-markup-documentation/getTitleContent';
 import operationsManager from 'fontoxml-operations/operationsManager';
 import t from 'fontoxml-localization/t';
-import truncator from 'fontoxml-utils/truncator';
 
 import { PopoverBody, Text, TextLink } from 'fds/components';
 
@@ -34,12 +33,7 @@ const determineReferenceTextLabels = ({ target, metadata }) => {
 		textRepresentation = domQuery.getTextContent(targetNode);
 	}
 
-	textRepresentation = truncator.truncateRight(
-		textRepresentation,
-		TEXT_CONTENT_TRUNCATE_LENGTH,
-		// Do not respect word boundaries to avoid truncation bug, see also FXC-1546
-		false
-	);
+	textRepresentation = textRepresentation.substr(0, TEXT_CONTENT_TRUNCATE_LENGTH - 1) + '…';
 
 	if (textRepresentation) {
 		return {
