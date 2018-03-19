@@ -53,7 +53,7 @@ const determineReferenceTextLabels = ({ target, metadata }, referenceNodeId) => 
 			targetMarkupLabel: targetMarkupLabel,
 			referenceMarkupLabel: referenceMarkupLabel,
 			previewLabel: showMoreLabel,
-			textRepresentation: t('“{TEXT_REPRESENTATION}” ', {
+			textRepresentation: t('“{TEXT_REPRESENTATION}”', {
 				TEXT_REPRESENTATION: textRepresentation
 			})
 		};
@@ -63,7 +63,7 @@ const determineReferenceTextLabels = ({ target, metadata }, referenceNodeId) => 
 		targetMarkupLabel: targetMarkupLabel,
 		referenceMarkupLabel: referenceMarkupLabel,
 		previewLabel: showPreviewLabel,
-		textRepresentation: t('This {MARKUP_LABEL} does not contain any textual content. ', {
+		textRepresentation: t('This {MARKUP_LABEL} does not contain any textual content.', {
 			MARKUP_LABEL: targetMarkupLabel
 		})
 	};
@@ -122,8 +122,7 @@ class CrossReferencePopover extends Component {
 				</Text>
 
 				<Text>
-					{referenceTextLabels.textRepresentation}
-
+					{referenceTextLabels.textRepresentation}{' '}
 					<TextLink label={referenceTextLabels.previewLabel} onClick={openPreview} />
 				</Text>
 			</PopoverBody>
