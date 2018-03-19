@@ -7,7 +7,7 @@ import domQuery from 'fontoxml-dom-utils/domQuery';
 import FxReferencePopover from 'fontoxml-fx/FxReferencePopover.jsx';
 import t from 'fontoxml-localization/t';
 import operationsManager from 'fontoxml-operations/operationsManager';
-import evaluateXpathToString from 'fontoxml-selectors/evaluateXPathToString';
+import evaluateXPathToString from 'fontoxml-selectors/evaluateXPathToString';
 
 import { PopoverBody, Text, TextLink } from 'fds/components';
 
@@ -15,26 +15,32 @@ const TEXT_CONTENT_TRUNCATE_LENGTH = 140;
 
 const showMoreLabel = t('Show more');
 const showPreviewLabel = t('Show preview');
-const noTextualRepresentationLabel = markupLabel =>
-	t('This {MARKUP_LABEL} does not contain any textual content. ', { MARKUP_LABEL: markupLabel });
 
 const handleOpenPreview = ({ target }) =>
 	operationsManager.executeOperation('open-document-preview-modal', target).catch(() => {});
 
-const determineReferenceTextLabels = ({ target, metadata }) => {
+const determineReferenceTextLabels = ({ target, metadata }, referenceNodeId) => {
 	const targetNode = target.nodeId
 		? documentsManager.getNodeById(target.nodeId, target.documentId)
 		: documentsManager.getDocumentNode(target.documentId).documentElement;
+	const referenceNode = documentsManager.getNodeById(referenceNodeId);
 
-	const markupLabel =
-		evaluateXpathToString('fonto:markup-label(.)', targetNode, readOnlyBlueprint) ||
-		targetNode.nodeName;
+	const targetMarkupLabel = evaluateXPathToString(
+		'fonto:markup-label(.)',
+		targetNode,
+		readOnlyBlueprint
+	);
+	const referenceMarkupLabel = evaluateXPathToString(
+		'fonto:markup-label(.)',
+		referenceNode,
+		readOnlyBlueprint
+	);
 	let textRepresentation =
 		(metadata && metadata.title) ||
-		evaluateXpathToString('fonto:title-content(.)', targetNode, readOnlyBlueprint);
+		evaluateXPathToString('fonto:title-content(.)', targetNode, readOnlyBlueprint);
 
 	if (!textRepresentation) {
-		textRepresentation = domQuery.getTextContent(targetNode);
+		textRepresentation = evaluateXPathToString('.', targetNode, readOnlyBlueprint);
 	}
 
 	textRepresentation =
@@ -44,7 +50,8 @@ const determineReferenceTextLabels = ({ target, metadata }) => {
 
 	if (textRepresentation) {
 		return {
-			markupLabel: markupLabel,
+			targetMarkupLabel: targetMarkupLabel,
+			referenceMarkupLabel: referenceMarkupLabel,
 			previewLabel: showMoreLabel,
 			textRepresentation: t('“{TEXT_REPRESENTATION}” ', {
 				TEXT_REPRESENTATION: textRepresentation
@@ -53,9 +60,12 @@ const determineReferenceTextLabels = ({ target, metadata }) => {
 	}
 
 	return {
-		markupLabel: markupLabel,
+		targetMarkupLabel: targetMarkupLabel,
+		referenceMarkupLabel: referenceMarkupLabel,
 		previewLabel: showPreviewLabel,
-		textRepresentation: noTextualRepresentationLabel(markupLabel)
+		textRepresentation: t('This {MARKUP_LABEL} does not contain any textual content. ', {
+			MARKUP_LABEL: targetMarkupLabel
+		})
 	};
 };
 
@@ -94,14 +104,21 @@ class CrossReferencePopover extends Component {
 	};
 
 	renderReference = ({ openPreview, reference }) => {
-		const referenceTextLabels = determineReferenceTextLabels(reference);
+		const referenceTextLabels = determineReferenceTextLabels(
+			reference,
+			this.props.data.contextNodeId
+		);
 
 		return (
 			<PopoverBody>
 				<Text colorName="text-muted-color">
-					{t('Cross link to the {REFERENCE_MARKUP_LABEL}:', {
-						REFERENCE_MARKUP_LABEL: referenceTextLabels.markupLabel
-					})}
+					{t(
+						'{REFERENCE_MARKUP_LABEL, fonto_upper_case_first_letter} to the {REFERENCE_TARGET_MARKUP_LABEL}:',
+						{
+							REFERENCE_MARKUP_LABEL: referenceTextLabels.referenceMarkupLabel,
+							REFERENCE_TARGET_MARKUP_LABEL: referenceTextLabels.targetMarkupLabel
+						}
+					)}
 				</Text>
 
 				<Text>
