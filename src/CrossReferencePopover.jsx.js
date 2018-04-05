@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 
 import readOnlyBlueprint from 'fontoxml-blueprints/readOnlyBlueprint';
 import documentsManager from 'fontoxml-documents/documentsManager';
-import domQuery from 'fontoxml-dom-utils/domQuery';
 import FxReferencePopover from 'fontoxml-fx/FxReferencePopover.jsx';
 import t from 'fontoxml-localization/t';
 import operationsManager from 'fontoxml-operations/operationsManager';
@@ -19,22 +18,28 @@ const showPreviewLabel = t('Show preview');
 const handleOpenPreview = ({ target }) =>
 	operationsManager.executeOperation('open-document-preview-modal', target).catch(() => {});
 
-const determineReferenceTextLabels = ({ target, metadata }, referenceNodeId) => {
+const determineReferenceTextLabels = (
+	{ target, metadata },
+	referenceNodeId,
+	referenceMarkupLabel
+) => {
 	const targetNode = target.nodeId
 		? documentsManager.getNodeById(target.nodeId, target.documentId)
 		: documentsManager.getDocumentNode(target.documentId).documentElement;
-	const referenceNode = documentsManager.getNodeById(referenceNodeId);
 
 	const targetMarkupLabel = evaluateXPathToString(
 		'fonto:markup-label(.)',
 		targetNode,
 		readOnlyBlueprint
 	);
-	const referenceMarkupLabel = evaluateXPathToString(
-		'fonto:markup-label(.)',
-		referenceNode,
-		readOnlyBlueprint
-	);
+	if (!referenceMarkupLabel) {
+		const referenceNode = documentsManager.getNodeById(referenceNodeId);
+		referenceMarkupLabel = evaluateXPathToString(
+			'fonto:markup-label(.)',
+			referenceNode,
+			readOnlyBlueprint
+		);
+	}
 	let textRepresentation =
 		(metadata && metadata.title) ||
 		evaluateXPathToString('fonto:title-content(.)', targetNode, readOnlyBlueprint);
@@ -87,6 +92,7 @@ class CrossReferencePopover extends Component {
 			contextNodeId: PropTypes.string.isRequired,
 			deleteOperationName: PropTypes.string,
 			editOperationName: PropTypes.string,
+			referenceMarkupLabel: PropTypes.string,
 			targetIsPermanentId: PropTypes.bool,
 			targetQuery: PropTypes.string.isRequired
 		}).isRequired,
@@ -106,7 +112,8 @@ class CrossReferencePopover extends Component {
 	renderReference = ({ openPreview, reference }) => {
 		const referenceTextLabels = determineReferenceTextLabels(
 			reference,
-			this.props.data.contextNodeId
+			this.props.data.contextNodeId,
+			this.props.data.referenceMarkupLabel
 		);
 
 		return (
@@ -165,8 +172,11 @@ export default CrossReferencePopover;
  *   self, contains the node ID of the node that is configured.
  * @property  {string}     [deleteOperationName='reference-delete'] The operation for removing the
  *   reference. Is by default {@link reference-delete}.
- * @property  {boolean}    [editOperationName]         Only when an editOperationName is used, a edit
+ * @property  {string}     [editOperationName]         Only when an editOperationName is used, a edit
  *   button is made. The edit operation should provide a way to edit the reference.
+ * @property  {string}     [referenceMarkupLabel]      Provide an alternative label for this
+ *   reference, provided as REFERENCE_MARKUP_LABEL to the MessageFormat for the popover's description.
+ *   If omitted, the configured markup label for the reference node is used instead.
  * @property  {XPathQuery} targetQuery                 Determines the reference content with a xpath
  *   query, starting from the context node. Often this is just an attribute, for example `@href`.
  * @property  {boolean}    [targetIsPermanentId=false] Determines wether the reference contains
