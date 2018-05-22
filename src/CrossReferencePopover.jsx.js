@@ -92,6 +92,7 @@ class CrossReferencePopover extends Component {
 			contextNodeId: PropTypes.string.isRequired,
 			deleteOperationName: PropTypes.string,
 			editOperationName: PropTypes.string,
+			isReadOnly: PropTypes.bool,
 			referenceMarkupLabel: PropTypes.string,
 			targetIsPermanentId: PropTypes.bool,
 			targetQuery: PropTypes.string.isRequired
