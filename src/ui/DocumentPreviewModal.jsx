@@ -2,11 +2,11 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
 import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from 'fds/components';
-import documentsManager from 'fontoxml-documents/documentsManager';
-import nodeHighlightManager from 'fontoxml-focus-highlight-view/nodeHighlightManager';
-import FxNodePreview from 'fontoxml-fx/FxNodePreview.jsx';
-import t from 'fontoxml-localization/t';
-import scrollIntoViewManager from 'fontoxml-scroll-into-view/scrollIntoViewManager';
+import documentsManager from 'fontoxml-documents/src/documentsManager.js';
+import nodeHighlightManager from 'fontoxml-focus-highlight-view/src/nodeHighlightManager.js';
+import FxNodePreview from 'fontoxml-fx/src/FxNodePreview.jsx';
+import t from 'fontoxml-localization/src/t.js';
+import scrollIntoViewManager from 'fontoxml-scroll-into-view/src/scrollIntoViewManager.js';
 
 const modalTitleDefault = t('Preview link');
 const closeButtonLabel = t('Close');
@@ -45,7 +45,10 @@ class DocumentPreviewModal extends Component {
 	};
 
 	render() {
-		const { cancelModal, data: { documentId, modalIcon, modalTitle } } = this.props;
+		const {
+			cancelModal,
+			data: { documentId, modalIcon, modalTitle }
+		} = this.props;
 
 		return (
 			<Modal size="m" onKeyDown={this.handleKeyDown}>

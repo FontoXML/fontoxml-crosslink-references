@@ -1,12 +1,12 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
-import readOnlyBlueprint from 'fontoxml-blueprints/readOnlyBlueprint';
-import documentsManager from 'fontoxml-documents/documentsManager';
-import FxReferencePopover from 'fontoxml-fx/FxReferencePopover.jsx';
-import t from 'fontoxml-localization/t';
-import operationsManager from 'fontoxml-operations/operationsManager';
-import evaluateXPathToString from 'fontoxml-selectors/evaluateXPathToString';
+import readOnlyBlueprint from 'fontoxml-blueprints/src/readOnlyBlueprint.js';
+import documentsManager from 'fontoxml-documents/src/documentsManager.js';
+import FxReferencePopover from 'fontoxml-fx/src/FxReferencePopover.jsx';
+import t from 'fontoxml-localization/src/t.js';
+import operationsManager from 'fontoxml-operations/src/operationsManager.js';
+import evaluateXPathToString from 'fontoxml-selectors/src/evaluateXPathToString.js';
 
 import { PopoverBody, Text, TextLink } from 'fds/components';
 
