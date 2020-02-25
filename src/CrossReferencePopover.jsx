@@ -1,12 +1,11 @@
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import React, { useCallback } from 'react';
 
-import readOnlyBlueprint from 'fontoxml-blueprints/src/readOnlyBlueprint.js';
 import documentsManager from 'fontoxml-documents/src/documentsManager.js';
 import FxReferencePopover from 'fontoxml-fx/src/FxReferencePopover.jsx';
+import useXPath, { XPATH_RETURN_TYPES } from 'fontoxml-fx/src/useXPath.js';
 import t from 'fontoxml-localization/src/t.js';
 import operationsManager from 'fontoxml-operations/src/operationsManager.js';
-import evaluateXPathToString from 'fontoxml-selectors/src/evaluateXPathToString.js';
 
 import { PopoverBody, Text, TextLink } from 'fds/components';
 
@@ -18,48 +17,46 @@ const showPreviewLabel = t('Show preview');
 const handleOpenPreview = ({ target }) =>
 	operationsManager.executeOperation('open-document-preview-modal', target).catch(() => {});
 
-const determineReferenceTextLabels = (
-	{ target, metadata },
-	referenceNodeId,
-	referenceMarkupLabel
-) => {
-	const targetNode = target.nodeId
-		? documentsManager.getNodeById(target.nodeId, target.documentId)
-		: documentsManager.getDocumentNode(target.documentId).documentElement;
+function useReferenceTextLabels(contextNodeId, reference, referenceMarkupLabel) {
+	const targetNode = reference.target.nodeId
+		? documentsManager.getNodeById(reference.target.nodeId)
+		: documentsManager.getDocumentNode(reference.target.documentId).documentElement;
 
-	const targetMarkupLabel = evaluateXPathToString(
-		'fonto:markup-label(.)',
-		targetNode,
-		readOnlyBlueprint
-	);
+	const targetMarkupLabel = useXPath('fonto:markup-label(.)', targetNode, {
+		expectedResultType: XPATH_RETURN_TYPES.STRING_TYPE
+	});
+
+	const referenceNode = documentsManager.getNodeById(contextNodeId);
+	const referenceMarkupLabelFallback = useXPath('fonto:markup-label(.)', referenceNode, {
+		expectedResultType: XPATH_RETURN_TYPES.STRING_TYPE
+	});
 	if (!referenceMarkupLabel) {
-		const referenceNode = documentsManager.getNodeById(referenceNodeId);
-		referenceMarkupLabel = evaluateXPathToString(
-			'fonto:markup-label(.)',
-			referenceNode,
-			readOnlyBlueprint
-		);
-	}
-	let textRepresentation =
-		(metadata && metadata.title) ||
-		evaluateXPathToString('fonto:title-content(.)', targetNode, readOnlyBlueprint);
-
-	if (!textRepresentation) {
-		textRepresentation = evaluateXPathToString('.', targetNode, readOnlyBlueprint);
+		referenceMarkupLabel = referenceMarkupLabelFallback;
 	}
 
-	textRepresentation =
-		textRepresentation.length <= TEXT_CONTENT_TRUNCATE_LENGTH
-			? textRepresentation
-			: textRepresentation.substr(0, TEXT_CONTENT_TRUNCATE_LENGTH - 1) + '…';
+	let titleContent = reference.metadata && reference.metadata.title;
+	const titleContentFallback = useXPath(
+		!titleContent &&
+			'let $titleContent := fonto:title-content(.) return if (titleContent) then titleContent else string(.)',
+		targetNode,
+		{ expectedResultType: XPATH_RETURN_TYPES.STRING_TYPE }
+	);
+	if (!titleContent) {
+		titleContent = titleContentFallback;
+	}
 
-	if (textRepresentation) {
+	titleContent =
+		titleContent.length <= TEXT_CONTENT_TRUNCATE_LENGTH
+			? titleContent
+			: titleContent.substr(0, TEXT_CONTENT_TRUNCATE_LENGTH - 1) + '…';
+
+	if (titleContent) {
 		return {
 			targetMarkupLabel: targetMarkupLabel,
 			referenceMarkupLabel: referenceMarkupLabel,
 			previewLabel: showMoreLabel,
 			textRepresentation: t('“{TEXT_REPRESENTATION}”', {
-				TEXT_REPRESENTATION: textRepresentation
+				TEXT_REPRESENTATION: titleContent
 			})
 		};
 	}
@@ -72,7 +69,39 @@ const determineReferenceTextLabels = (
 			MARKUP_LABEL: targetMarkupLabel
 		})
 	};
-};
+}
+
+function CrossReferencePopoverBody({
+	contextNodeId,
+	openPreview,
+	reference,
+	referenceMarkupLabel
+}) {
+	const referenceTextLabels = useReferenceTextLabels(
+		contextNodeId,
+		reference,
+		referenceMarkupLabel
+	);
+
+	return (
+		<PopoverBody>
+			<Text colorName="text-muted-color">
+				{t(
+					'{REFERENCE_MARKUP_LABEL, fonto_upper_case_first_letter} to the {REFERENCE_TARGET_MARKUP_LABEL}:',
+					{
+						REFERENCE_MARKUP_LABEL: referenceTextLabels.referenceMarkupLabel,
+						REFERENCE_TARGET_MARKUP_LABEL: referenceTextLabels.targetMarkupLabel
+					}
+				)}
+			</Text>
+
+			<Text>
+				{referenceTextLabels.textRepresentation}{' '}
+				<TextLink label={referenceTextLabels.previewLabel} onClick={openPreview} />
+			</Text>
+		</PopoverBody>
+	);
+}
 
 /**
  * A component used for making a popover for cross references.
@@ -84,70 +113,57 @@ const determineReferenceTextLabels = (
  * @react
  * @category add-on/fontoxml-crosslink-references
  */
-class CrossReferencePopover extends Component {
-	static propTypes = {
-		/**
-		 * @type {CrossReferencePopover~data}
-		 */
-		data: PropTypes.shape({
-			contextNodeId: PropTypes.string.isRequired,
-			deleteOperationName: PropTypes.string,
-			editOperationName: PropTypes.string,
-			isReadOnly: PropTypes.bool,
-			referenceMarkupLabel: PropTypes.string,
-			targetIsPermanentId: PropTypes.bool,
-			targetQuery: PropTypes.string.isRequired
-		}).isRequired,
-		/**
-		 * This callback will be triggered when the popover is opened or after the permanent id is
-		 * resolved (if the reference has permanent ids `data.targetIsPermanentId`).
-		 *
-		 * @param {string} target The unresolved target, this is the resolved permanent id or
-		 *    the outcome of `data.targetQuery`.
-		 *
-		 * @return {Promise.<CrossReferencePopover~returnObject>} The resolved target. This
-		 *    should be a promise that resolves into an object.
-		 */
-		resolveReference: PropTypes.func.isRequired
-	};
+function CrossReferencePopover(props) {
+	const renderReference = useCallback(
+		({ openPreview, reference }) => {
+			return (
+				<CrossReferencePopoverBody
+					contextNodeId={props.data.contextNodeId}
+					openPreview={openPreview}
+					reference={reference}
+					referenceMarkupLabel={props.data.referenceMarkupLabel}
+				/>
+			);
+		},
+		[props.data.contextNodeId, props.data.referenceMarkupLabel]
+	);
 
-	renderReference = ({ openPreview, reference }) => {
-		const referenceTextLabels = determineReferenceTextLabels(
-			reference,
-			this.props.data.contextNodeId,
-			this.props.data.referenceMarkupLabel
-		);
-
-		return (
-			<PopoverBody>
-				<Text colorName="text-muted-color">
-					{t(
-						'{REFERENCE_MARKUP_LABEL, fonto_upper_case_first_letter} to the {REFERENCE_TARGET_MARKUP_LABEL}:',
-						{
-							REFERENCE_MARKUP_LABEL: referenceTextLabels.referenceMarkupLabel,
-							REFERENCE_TARGET_MARKUP_LABEL: referenceTextLabels.targetMarkupLabel
-						}
-					)}
-				</Text>
-
-				<Text>
-					{referenceTextLabels.textRepresentation}{' '}
-					<TextLink label={referenceTextLabels.previewLabel} onClick={openPreview} />
-				</Text>
-			</PopoverBody>
-		);
-	};
-
-	render() {
-		return (
-			<FxReferencePopover
-				{...this.props}
-				openPreview={handleOpenPreview}
-				renderReference={this.renderReference}
-			/>
-		);
-	}
+	return (
+		<FxReferencePopover
+			{...props}
+			openPreview={handleOpenPreview}
+			renderReference={renderReference}
+		/>
+	);
 }
+
+CrossReferencePopover.displayName = 'CrossReferencePopover';
+
+CrossReferencePopover.propTypes = {
+	/**
+	 * @type {CrossReferencePopover~data}
+	 */
+	data: PropTypes.shape({
+		contextNodeId: PropTypes.string.isRequired,
+		deleteOperationName: PropTypes.string,
+		editOperationName: PropTypes.string,
+		isReadOnly: PropTypes.bool,
+		referenceMarkupLabel: PropTypes.string,
+		targetIsPermanentId: PropTypes.bool,
+		targetQuery: PropTypes.string.isRequired
+	}).isRequired,
+	/**
+	 * This callback will be triggered when the popover is opened or after the permanent id is
+	 * resolved (if the reference has permanent ids `data.targetIsPermanentId`).
+	 *
+	 * @param {string} target The unresolved target, this is the resolved permanent id or
+	 *    the outcome of `data.targetQuery`.
+	 *
+	 * @return {Promise.<CrossReferencePopover~returnObject>} The resolved target. This
+	 *    should be a promise that resolves into an object.
+	 */
+	resolveReference: PropTypes.func.isRequired
+};
 
 export default CrossReferencePopover;
 
