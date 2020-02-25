@@ -81,6 +81,7 @@ const determineReferenceTextLabels = (
  * The only property that still needs to be added is the `resolveReference` property.
  *
  * @fontosdk
+ * @react
  * @category add-on/fontoxml-crosslink-references
  */
 class CrossReferencePopover extends Component {
