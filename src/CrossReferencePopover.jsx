@@ -6,9 +6,6 @@ import operationsManager from 'fontoxml-operations/src/operationsManager.js';
 
 import CrossReferencePopoverBody from './ui/CrossReferencePopoverBody.jsx';
 
-const handleOpenPreview = ({ target }) =>
-	operationsManager.executeOperation('open-document-preview-modal', target).catch(() => {});
-
 /**
  * A component used for making a popover for cross references.
  *
@@ -33,6 +30,18 @@ function CrossReferencePopover({ data, ...props }) {
 		},
 		[data.contextNodeId, data.referenceMarkupLabel]
 	);
+
+	const handleOpenPreview = ({ target }) => {
+		if (data.editOperationName && data.contextNodeId) {
+			target = {
+				...target,
+				editOperationName: data.editOperationName,
+				contextNodeId: data.contextNodeId,
+				targetQuery: data.targetQuery
+			};
+		}
+		operationsManager.executeOperation('open-document-preview-modal', target).catch(() => {});
+	};
 
 	return (
 		<FxReferencePopover
