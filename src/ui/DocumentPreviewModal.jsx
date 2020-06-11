@@ -66,7 +66,25 @@ class DocumentPreviewModal extends Component {
 
 		const { editOperationName, contextNodeId } = this.props.data;
 		if (editOperationName && contextNodeId) {
-			operationsManager.executeOperation(editOperationName, { contextNodeId });
+			operationsManager.executeOperation(editOperationName, { contextNodeId }).catch(() => {
+				const {
+					documentId,
+					nodeId,
+					editOperationName,
+					contextNodeId,
+					targetQuery
+				} = this.props.data;
+
+				operationsManager
+					.executeOperation('open-document-preview-modal', {
+						documentId,
+						nodeId,
+						editOperationName,
+						contextNodeId,
+						targetQuery
+					})
+					.catch(() => {});
+			});
 		}
 	};
 
