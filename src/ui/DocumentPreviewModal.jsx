@@ -21,16 +21,6 @@ import scrollIntoViewManager from 'fontoxml-scroll-into-view/src/scrollIntoViewM
 const modalTitleDefault = t('Preview link');
 const closeButtonLabel = t('Close');
 
-function determineEditReferenceLabel(targetQuery) {
-	if (targetQuery === '@conref') {
-		return t('Edit conref');
-	} else if (targetQuery === '@href') {
-		return t('Edit cross link');
-	}
-
-	return t('Edit reference');
-}
-
 class DocumentPreviewModal extends Component {
 	static propTypes = {
 		cancelModal: PropTypes.func.isRequired,
@@ -100,7 +90,7 @@ class DocumentPreviewModal extends Component {
 			data: { documentId, modalIcon, modalTitle, editOperationName, targetQuery }
 		} = this.props;
 
-		const editReferenceLabel = determineEditReferenceLabel(targetQuery);
+		const editReferenceLabel = t('Edit reference');
 
 		return (
 			<Modal size="m" onKeyDown={this.handleKeyDown}>
