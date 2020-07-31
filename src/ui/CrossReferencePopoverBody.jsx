@@ -31,7 +31,7 @@ function useReferenceTextLabels(contextNodeId, reference, referenceMarkupLabel) 
 	let titleContent = reference.metadata && reference.metadata.title;
 	const titleContentFallback = useXPath(
 		!titleContent &&
-			'let $titleContent := fonto:title-content(.) return if (titleContent) then titleContent else string(.)',
+		'let $titleContent := fonto:title-content(.) return if ($titleContent) then $titleContent else string(.)',
 		targetNode,
 		{ expectedResultType: XPATH_RETURN_TYPES.STRING_TYPE }
 	);
