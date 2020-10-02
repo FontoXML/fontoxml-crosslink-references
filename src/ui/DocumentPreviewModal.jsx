@@ -14,10 +14,11 @@ import {
 import documentsManager from 'fontoxml-documents/src/documentsManager.js';
 import nodeHighlightManager from 'fontoxml-focus-highlight-view/src/nodeHighlightManager.js';
 import FxNodePreview from 'fontoxml-fx/src/FxNodePreview.jsx';
-import operationsManager from 'fontoxml-operations/src/operationsManager.js';
 import t from 'fontoxml-localization/src/t.js';
-import scrollIntoViewManager from 'fontoxml-scroll-into-view/src/scrollIntoViewManager.js';
 import uiManager from 'fontoxml-modular-ui/src/uiManager.js';
+import operationsManager from 'fontoxml-operations/src/operationsManager.js';
+import remoteDocumentStateManager from 'fontoxml-remote-documents/src/remoteDocumentStateManager.js';
+import scrollIntoViewManager from 'fontoxml-scroll-into-view/src/scrollIntoViewManager.js';
 
 const modalTitleDefault = t('Preview link');
 const closeButtonLabel = t('Close');
@@ -88,13 +89,20 @@ class DocumentPreviewModal extends Component {
 	render() {
 		const {
 			cancelModal,
-			data: { documentId, modalIcon, modalTitle, editOperationName }
+			data: { documentId, contextNodeId, modalIcon, modalTitle, editOperationName }
 		} = this.props;
 
 		const editReferenceLabel = t('Edit reference');
 
-		const availableEditReference =
+		const isOnEditorRoute =
 			uiManager.getCurrentLocation().pathname.substr(1) === 'editor';
+
+		// Take document id from the reference one, and see if it's out of sync
+		const referrerDocumentId = documentsManager.getDocumentIdByNodeId(contextNodeId);
+		const documentStatus = remoteDocumentStateManager.getState(referrerDocumentId);
+		const isInSync = documentStatus.isInSync;
+
+		const isEditReferenceAvailable = isOnEditorRoute && isInSync;
 
 		return (
 			<Modal size="m" onKeyDown={this.handleKeyDown}>
@@ -104,7 +112,7 @@ class DocumentPreviewModal extends Component {
 					<ModalContent flexDirection="column" isScrollContainer>
 						<FxNodePreview documentId={documentId} />
 					</ModalContent>
-					{editOperationName && availableEditReference && (
+					{editOperationName && isEditReferenceAvailable && (
 						<Flex applyCss={{ marginTop: '1em' }}>
 							<TextLink
 								label={editReferenceLabel}
