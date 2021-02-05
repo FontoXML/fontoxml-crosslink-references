@@ -31,9 +31,8 @@ class DocumentPreviewModal extends Component {
 			modalIcon: PropTypes.string,
 			modalTitle: PropTypes.string,
 			nodeId: PropTypes.string,
-			editOperationName: PropTypes.string,
-			contextNodeId: PropTypes.string,
-			targetQuery: PropTypes.string
+			editReferenceOperationName: PropTypes.string,
+			editReferenceNodeId: PropTypes.string
 		}).isRequired
 	};
 
@@ -56,27 +55,35 @@ class DocumentPreviewModal extends Component {
 	handleReplaceButton = () => {
 		this.props.cancelModal();
 
-		const { editOperationName, contextNodeId } = this.props.data;
-		if (editOperationName && contextNodeId) {
-			operationsManager.executeOperation(editOperationName, { contextNodeId }).catch(() => {
-				const {
-					documentId,
-					nodeId,
-					editOperationName,
-					contextNodeId,
-					targetQuery
-				} = this.props.data;
-
-				operationsManager
-					.executeOperation('open-document-preview-modal', {
+		const { editReferenceOperationName, editReferenceNodeId } = this.props.data;
+		if (editReferenceOperationName && editReferenceNodeId) {
+			operationsManager
+				.executeOperation(editReferenceOperationName, {
+					contextNodeId: editReferenceNodeId
+				})
+				.catch(() => {
+					const {
 						documentId,
+						modalIcon,
+						modalTitle,
 						nodeId,
-						editOperationName,
-						contextNodeId,
-						targetQuery
-					})
-					.catch(() => {});
-			});
+						// eslint-disable-next-line no-shadow
+						editReferenceOperationName,
+						// eslint-disable-next-line no-shadow
+						editReferenceNodeId
+					} = this.props.data;
+
+					operationsManager
+						.executeOperation('open-document-preview-modal', {
+							documentId,
+							modalIcon,
+							modalTitle,
+							nodeId,
+							editReferenceOperationName,
+							editReferenceNodeId
+						})
+						.catch(() => {});
+				});
 		}
 	};
 

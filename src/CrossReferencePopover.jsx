@@ -32,15 +32,17 @@ function CrossReferencePopover({ data, ...props }) {
 	);
 
 	const handleOpenPreview = ({ target }) => {
-		if (data.editOperationName && data.contextNodeId) {
-			target = {
-				...target,
-				editOperationName: data.editOperationName,
-				contextNodeId: data.contextNodeId,
-				targetQuery: data.targetQuery
-			};
-		}
-		operationsManager.executeOperation('open-document-preview-modal', target).catch(() => {});
+		const canEditReference = data.editOperationName && data.contextNodeId;
+		const operationData = canEditReference
+			? {
+					...target,
+					editReferenceOperationName: data.editOperationName,
+					editReferenceNodeId: data.contextNodeId
+			  }
+			: target;
+		operationsManager
+			.executeOperation('open-document-preview-modal', operationData)
+			.catch(() => {});
 	};
 
 	return (

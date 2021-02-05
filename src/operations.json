@@ -4,6 +4,18 @@
 			"fontosdk": true,
 			"category": "add-on/fontoxml-crosslink-references",
 			"summary": "Opens the document preview modal.",
+			"description": [
+				"This operation opens a modal showing a preview of the given document. The document",
+				"should already be loaded. It can optionally highlight a node in the previewed",
+				"document. This is usually used to indicate the target of a reference.",
+				"",
+				"The modal can also optionally show an 'edit reference' link. This is intended for",
+				"cases where the modal is used to display the target of a reference, where the link",
+				"provides a convenient way for users to edit that reference. To use this feature,",
+				"pass both the editReferenceNodeId and editReferenceOperationName properties. Note",
+				"that the link is automatically hidden if the node corresponding to the",
+				"editReferenceNodeId is not editable."
+			],
 			"params": [
 				{
 					"name": "documentId",
@@ -24,6 +36,16 @@
 					"name": "nodeId",
 					"type": "NodeId",
 					"description": "The node which should be highlighted."
+				},
+				{
+					"name": "editReferenceNodeId",
+					"type": "NodeId",
+					"description": "(Optional) The ID of the referencing node for which an 'edit reference' link should be shown."
+				},
+				{
+					"name": "editReferenceOperationName",
+					"type": "string",
+					"description": "(Optional) The name of the operation that should be invoked when the 'edit reference' link is clicked."
 				}
 			]
 		},
