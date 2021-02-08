@@ -15,10 +15,10 @@ import {
 import documentsManager from 'fontoxml-documents/src/documentsManager.js';
 import nodeHighlightManager from 'fontoxml-focus-highlight-view/src/nodeHighlightManager.js';
 import FxNodePreview from 'fontoxml-fx/src/FxNodePreview.jsx';
+import FxXPath, { XPATH_RETURN_TYPES } from 'fontoxml-fx/src/FxXPath.jsx';
 import t from 'fontoxml-localization/src/t.js';
 import operationsManager from 'fontoxml-operations/src/operationsManager.js';
 import scrollIntoViewManager from 'fontoxml-scroll-into-view/src/scrollIntoViewManager.js';
-import uiManager from 'fontoxml-modular-ui/src/uiManager.js';
 
 const modalTitleDefault = t('Preview link');
 const closeButtonLabel = t('Close');
@@ -56,35 +56,33 @@ class DocumentPreviewModal extends Component {
 		this.props.cancelModal();
 
 		const { editReferenceOperationName, editReferenceNodeId } = this.props.data;
-		if (editReferenceOperationName && editReferenceNodeId) {
-			operationsManager
-				.executeOperation(editReferenceOperationName, {
-					contextNodeId: editReferenceNodeId
-				})
-				.catch(() => {
-					const {
+		operationsManager
+			.executeOperation(editReferenceOperationName, {
+				contextNodeId: editReferenceNodeId
+			})
+			.catch(() => {
+				const {
+					documentId,
+					modalIcon,
+					modalTitle,
+					nodeId,
+					// eslint-disable-next-line no-shadow
+					editReferenceOperationName,
+					// eslint-disable-next-line no-shadow
+					editReferenceNodeId
+				} = this.props.data;
+
+				operationsManager
+					.executeOperation('open-document-preview-modal', {
 						documentId,
 						modalIcon,
 						modalTitle,
 						nodeId,
-						// eslint-disable-next-line no-shadow
 						editReferenceOperationName,
-						// eslint-disable-next-line no-shadow
 						editReferenceNodeId
-					} = this.props.data;
-
-					operationsManager
-						.executeOperation('open-document-preview-modal', {
-							documentId,
-							modalIcon,
-							modalTitle,
-							nodeId,
-							editReferenceOperationName,
-							editReferenceNodeId
-						})
-						.catch(() => {});
-				});
-		}
+					})
+					.catch(() => {});
+			});
 	};
 
 	handleKeyDown = event => {
@@ -96,13 +94,21 @@ class DocumentPreviewModal extends Component {
 	render() {
 		const {
 			cancelModal,
-			data: { documentId, modalIcon, modalTitle, editOperationName }
+			data: {
+				documentId,
+				modalIcon,
+				modalTitle,
+				editReferenceOperationName,
+				editReferenceNodeId
+			}
 		} = this.props;
 
-		const editReferenceLabel = t('Edit reference');
-
-		const availableEditReference =
-			uiManager.getCurrentLocation().pathname.substr(1) === 'editor';
+		// Only show "Edit reference" link if the two props are set and the reference node is  not
+		// read-only
+		const referenceNode =
+			editReferenceOperationName &&
+			editReferenceNodeId &&
+			documentsManager.getNodeById(editReferenceNodeId);
 
 		return (
 			<Modal size="m" onKeyDown={this.handleKeyDown}>
@@ -112,13 +118,23 @@ class DocumentPreviewModal extends Component {
 					<ModalContent flexDirection="column" isScrollContainer>
 						<FxNodePreview documentId={documentId} />
 					</ModalContent>
-					{editOperationName && availableEditReference && (
-						<Flex applyCss={{ marginTop: '1em' }}>
-							<TextLink
-								label={editReferenceLabel}
-								onClick={this.handleReplaceButton}
-							/>
-						</Flex>
+					{referenceNode && (
+						<FxXPath
+							expression="fonto:is-node-read-only(.)"
+							context={referenceNode}
+							returnType={XPATH_RETURN_TYPES.BOOLEAN_TYPE}
+						>
+							{isReadOnly =>
+								!isReadOnly && (
+									<Flex applyCss={{ marginTop: '1em' }}>
+										<TextLink
+											label={t('Edit reference')}
+											onClick={this.handleReplaceButton}
+										/>
+									</Flex>
+								)
+							}
+						</FxXPath>
 					)}
 				</ModalBody>
 
