@@ -31,19 +31,27 @@ function CrossReferencePopover({ data, ...props }) {
 		[data.contextNodeId, data.referenceMarkupLabel]
 	);
 
-	const handleOpenPreview = ({ target }) => {
-		const canEditReference = data.editOperationName && data.contextNodeId;
-		const operationData = canEditReference
-			? {
-					...target,
-					editReferenceOperationName: data.editOperationName,
-					editReferenceNodeId: data.contextNodeId
-			  }
-			: target;
-		operationsManager
-			.executeOperation('open-document-preview-modal', operationData)
-			.catch(() => {});
-	};
+	const handleOpenPreview = useCallback(
+		({ target }) => {
+			// The reference can only be edited from the preview modal if we have its node ID, an
+			// edit operation, and are not in any way read-only. The modal does check whether the
+			// reference node is read-only, but data.isReadOnly may also indicate that this popover
+			// was opened from a preview...
+			const canEditReference =
+				!data.isReadOnly && data.editOperationName && data.contextNodeId;
+			const operationData = canEditReference
+				? {
+						...target,
+						editReferenceOperationName: data.editOperationName,
+						editReferenceNodeId: data.contextNodeId
+				  }
+				: target;
+			operationsManager
+				.executeOperation('open-document-preview-modal', operationData)
+				.catch(() => {});
+		},
+		[data.contextNodeId, data.editOperationName, data.isReadOnly]
+	);
 
 	return (
 		<FxReferencePopover
