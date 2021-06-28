@@ -1,10 +1,9 @@
+import { PopoverBody, Text, TextLink } from 'fds/components';
 import React from 'react';
 
-import { PopoverBody, Text, TextLink } from 'fds/components';
-
 import documentsManager from 'fontoxml-documents/src/documentsManager';
-import t from 'fontoxml-localization/src/t';
 import useXPath, { XPATH_RETURN_TYPES } from 'fontoxml-fx/src/useXPath';
+import t from 'fontoxml-localization/src/t';
 
 const TEXT_CONTENT_TRUNCATE_LENGTH = 140;
 
@@ -60,12 +59,12 @@ function useReferenceTextLabels(
 	titleContent =
 		titleContent.length <= TEXT_CONTENT_TRUNCATE_LENGTH
 			? titleContent
-			: titleContent.substr(0, TEXT_CONTENT_TRUNCATE_LENGTH - 1) + '…';
+			: `${titleContent.substr(0, TEXT_CONTENT_TRUNCATE_LENGTH - 1)}…`;
 
 	if (titleContent) {
 		return {
-			targetMarkupLabel: targetMarkupLabel,
-			referenceMarkupLabel: referenceMarkupLabel,
+			targetMarkupLabel,
+			referenceMarkupLabel,
 			previewLabel: showMoreLabel,
 			textRepresentation: t('“{TEXT_REPRESENTATION}”', {
 				TEXT_REPRESENTATION: titleContent,
@@ -74,8 +73,8 @@ function useReferenceTextLabels(
 	}
 
 	return {
-		targetMarkupLabel: targetMarkupLabel,
-		referenceMarkupLabel: referenceMarkupLabel,
+		targetMarkupLabel,
+		referenceMarkupLabel,
 		previewLabel: showPreviewLabel,
 		textRepresentation: t(
 			'This {MARKUP_LABEL} does not contain any textual content.',

@@ -1,5 +1,6 @@
 import nodeHighlightManager from 'fontoxml-focus-highlight-view/src/nodeHighlightManager';
 import uiManager from 'fontoxml-modular-ui/src/uiManager';
+
 import DocumentPreviewModal from './ui/DocumentPreviewModal';
 
 export default function install(): void {

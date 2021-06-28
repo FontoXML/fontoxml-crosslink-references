@@ -1,6 +1,3 @@
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
-
 import {
 	Button,
 	Flex,
@@ -11,6 +8,8 @@ import {
 	ModalHeader,
 	TextLink,
 } from 'fds/components';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 
 import documentsManager from 'fontoxml-documents/src/documentsManager';
 import nodeHighlightManager from 'fontoxml-focus-highlight-view/src/nodeHighlightManager';
