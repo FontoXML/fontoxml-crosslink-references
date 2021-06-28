@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
 import React, { useCallback } from 'react';
 
-import FxReferencePopover from 'fontoxml-fx/src/FxReferencePopover.jsx';
-import operationsManager from 'fontoxml-operations/src/operationsManager.js';
+import FxReferencePopover from 'fontoxml-fx/src/FxReferencePopover';
+import operationsManager from 'fontoxml-operations/src/operationsManager';
 
-import CrossReferencePopoverBody from './ui/CrossReferencePopoverBody.jsx';
+import CrossReferencePopoverBody from './ui/CrossReferencePopoverBody';
 
 /**
  * A component used for making a popover for cross references.
@@ -38,12 +38,14 @@ function CrossReferencePopover({ data, ...props }) {
 			// reference node is read-only, but data.isReadOnly may also indicate that this popover
 			// was opened from a preview...
 			const canEditReference =
-				!data.isReadOnly && data.editOperationName && data.contextNodeId;
+				!data.isReadOnly &&
+				data.editOperationName &&
+				data.contextNodeId;
 			const operationData = canEditReference
 				? {
 						...target,
 						editReferenceOperationName: data.editOperationName,
-						editReferenceNodeId: data.contextNodeId
+						editReferenceNodeId: data.contextNodeId,
 				  }
 				: target;
 			operationsManager
@@ -76,7 +78,7 @@ CrossReferencePopover.propTypes = {
 		isReadOnly: PropTypes.bool,
 		referenceMarkupLabel: PropTypes.string,
 		targetIsPermanentId: PropTypes.bool,
-		targetQuery: PropTypes.string.isRequired
+		targetQuery: PropTypes.string.isRequired,
 	}).isRequired,
 	/**
 	 * This callback will be triggered when the popover is opened or after the permanent id is
@@ -88,7 +90,7 @@ CrossReferencePopover.propTypes = {
 	 * @return {Promise.<CrossReferencePopover~returnObject>} The resolved target. This
 	 *    should be a promise that resolves into an object.
 	 */
-	resolveReference: PropTypes.func.isRequired
+	resolveReference: PropTypes.func.isRequired,
 };
 
 export default CrossReferencePopover;

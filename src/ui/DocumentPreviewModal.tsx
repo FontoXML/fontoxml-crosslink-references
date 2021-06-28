@@ -9,16 +9,16 @@ import {
 	ModalContent,
 	ModalFooter,
 	ModalHeader,
-	TextLink
+	TextLink,
 } from 'fds/components';
 
-import documentsManager from 'fontoxml-documents/src/documentsManager.js';
-import nodeHighlightManager from 'fontoxml-focus-highlight-view/src/nodeHighlightManager.js';
-import FxNodePreview from 'fontoxml-fx/src/FxNodePreview.jsx';
-import FxXPath, { XPATH_RETURN_TYPES } from 'fontoxml-fx/src/FxXPath.jsx';
-import t from 'fontoxml-localization/src/t.js';
-import operationsManager from 'fontoxml-operations/src/operationsManager.js';
-import scrollIntoViewManager from 'fontoxml-scroll-into-view/src/scrollIntoViewManager.js';
+import documentsManager from 'fontoxml-documents/src/documentsManager';
+import nodeHighlightManager from 'fontoxml-focus-highlight-view/src/nodeHighlightManager';
+import FxNodePreview from 'fontoxml-fx/src/FxNodePreview';
+import FxXPath, { XPATH_RETURN_TYPES } from 'fontoxml-fx/src/FxXPath';
+import t from 'fontoxml-localization/src/t';
+import operationsManager from 'fontoxml-operations/src/operationsManager';
+import scrollIntoViewManager from 'fontoxml-scroll-into-view/src/scrollIntoViewManager';
 
 const modalTitleDefault = t('Preview link');
 const closeButtonLabel = t('Close');
@@ -32,8 +32,8 @@ class DocumentPreviewModal extends Component {
 			modalTitle: PropTypes.string,
 			nodeId: PropTypes.string,
 			editReferenceOperationName: PropTypes.string,
-			editReferenceNodeId: PropTypes.string
-		}).isRequired
+			editReferenceNodeId: PropTypes.string,
+		}).isRequired,
 	};
 
 	componentDidMount() {
@@ -46,7 +46,7 @@ class DocumentPreviewModal extends Component {
 				documentsManager.getNodeById(nodeId),
 				{
 					alignTo: 'center',
-					forceScroll: true
+					forceScroll: true,
 				}
 			);
 		}
@@ -55,10 +55,11 @@ class DocumentPreviewModal extends Component {
 	handleReplaceButton = () => {
 		this.props.cancelModal();
 
-		const { editReferenceOperationName, editReferenceNodeId } = this.props.data;
+		const { editReferenceOperationName, editReferenceNodeId } =
+			this.props.data;
 		operationsManager
 			.executeOperation(editReferenceOperationName, {
-				contextNodeId: editReferenceNodeId
+				contextNodeId: editReferenceNodeId,
 			})
 			.catch(() => {
 				const {
@@ -69,7 +70,7 @@ class DocumentPreviewModal extends Component {
 					// eslint-disable-next-line no-shadow
 					editReferenceOperationName,
 					// eslint-disable-next-line no-shadow
-					editReferenceNodeId
+					editReferenceNodeId,
 				} = this.props.data;
 
 				operationsManager
@@ -79,13 +80,13 @@ class DocumentPreviewModal extends Component {
 						modalTitle,
 						nodeId,
 						editReferenceOperationName,
-						editReferenceNodeId
+						editReferenceNodeId,
 					})
 					.catch(() => {});
 			});
 	};
 
-	handleKeyDown = event => {
+	handleKeyDown = (event) => {
 		if (event.key === 'Escape' || event.key === 'Enter') {
 			this.props.cancelModal();
 		}
@@ -99,8 +100,8 @@ class DocumentPreviewModal extends Component {
 				modalIcon,
 				modalTitle,
 				editReferenceOperationName,
-				editReferenceNodeId
-			}
+				editReferenceNodeId,
+			},
 		} = this.props;
 
 		// Only show "Edit reference" link if the two props are set and the reference node is  not
@@ -112,7 +113,10 @@ class DocumentPreviewModal extends Component {
 
 		return (
 			<Modal size="m" onKeyDown={this.handleKeyDown}>
-				<ModalHeader title={modalTitle || modalTitleDefault} icon={modalIcon || ''} />
+				<ModalHeader
+					title={modalTitle || modalTitleDefault}
+					icon={modalIcon || ''}
+				/>
 
 				<ModalBody>
 					<ModalContent flexDirection="column" isScrollContainer>
@@ -124,7 +128,7 @@ class DocumentPreviewModal extends Component {
 							context={referenceNode}
 							returnType={XPATH_RETURN_TYPES.BOOLEAN_TYPE}
 						>
-							{isReadOnly =>
+							{(isReadOnly) =>
 								!isReadOnly && (
 									<Flex applyCss={{ marginTop: '1em' }}>
 										<TextLink
@@ -139,7 +143,11 @@ class DocumentPreviewModal extends Component {
 				</ModalBody>
 
 				<ModalFooter>
-					<Button label={closeButtonLabel} type="primary" onClick={cancelModal} />
+					<Button
+						label={closeButtonLabel}
+						type="primary"
+						onClick={cancelModal}
+					/>
 				</ModalFooter>
 			</Modal>
 		);
