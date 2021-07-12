@@ -1,10 +1,22 @@
-import PropTypes from 'prop-types';
 import React, { useCallback } from 'react';
 
 import FxReferencePopover from 'fontoxml-fx/src/FxReferencePopover';
 import operationsManager from 'fontoxml-operations/src/operationsManager';
 
 import CrossReferencePopoverBody from './ui/CrossReferencePopoverBody';
+
+type Props = {
+	data: {
+		contextNodeId: string;
+		deleteOperationName?: string;
+		editOperationName?: string;
+		isReadOnly?: boolean;
+		referenceMarkupLabel?: string;
+		targetIsPermanentId?: boolean;
+		targetQuery: string;
+	};
+	resolveReference(...args: unknown[]): unknown;
+};
 
 /**
  * A component used for making a popover for cross references.
@@ -16,7 +28,7 @@ import CrossReferencePopoverBody from './ui/CrossReferencePopoverBody';
  * @react
  * @category add-on/fontoxml-crosslink-references
  */
-function CrossReferencePopover({ data, ...props }) {
+function CrossReferencePopover({ data, ...props }: Props) {
 	const renderReference = useCallback(
 		({ openPreview, reference }) => {
 			return (
@@ -66,32 +78,6 @@ function CrossReferencePopover({ data, ...props }) {
 }
 
 CrossReferencePopover.displayName = 'CrossReferencePopover';
-
-CrossReferencePopover.propTypes = {
-	/**
-	 * @type {CrossReferencePopover~data}
-	 */
-	data: PropTypes.shape({
-		contextNodeId: PropTypes.string.isRequired,
-		deleteOperationName: PropTypes.string,
-		editOperationName: PropTypes.string,
-		isReadOnly: PropTypes.bool,
-		referenceMarkupLabel: PropTypes.string,
-		targetIsPermanentId: PropTypes.bool,
-		targetQuery: PropTypes.string.isRequired,
-	}).isRequired,
-	/**
-	 * This callback will be triggered when the popover is opened or after the permanent id is
-	 * resolved (if the reference has permanent ids `data.targetIsPermanentId`).
-	 *
-	 * @param {string} target The unresolved target, this is the resolved permanent id or
-	 *    the outcome of `data.targetQuery`.
-	 *
-	 * @return {Promise.<CrossReferencePopover~returnObject>} The resolved target. This
-	 *    should be a promise that resolves into an object.
-	 */
-	resolveReference: PropTypes.func.isRequired,
-};
 
 export default CrossReferencePopover;
 

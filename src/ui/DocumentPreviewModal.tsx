@@ -8,7 +8,6 @@ import {
 	ModalHeader,
 	TextLink,
 } from 'fds/components';
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
 import documentsManager from 'fontoxml-documents/src/documentsManager';
@@ -22,19 +21,19 @@ import scrollIntoViewManager from 'fontoxml-scroll-into-view/src/scrollIntoViewM
 const modalTitleDefault = t('Preview link');
 const closeButtonLabel = t('Close');
 
-class DocumentPreviewModal extends Component {
-	static propTypes = {
-		cancelModal: PropTypes.func.isRequired,
-		data: PropTypes.shape({
-			documentId: PropTypes.string.isRequired,
-			modalIcon: PropTypes.string,
-			modalTitle: PropTypes.string,
-			nodeId: PropTypes.string,
-			editReferenceOperationName: PropTypes.string,
-			editReferenceNodeId: PropTypes.string,
-		}).isRequired,
+type Props = {
+	cancelModal(...args: unknown[]): unknown;
+	data: {
+		documentId: string;
+		modalIcon?: string;
+		modalTitle?: string;
+		nodeId?: string;
+		editReferenceOperationName?: string;
+		editReferenceNodeId?: string;
 	};
+};
 
+class DocumentPreviewModal extends Component<Props> {
 	componentDidMount() {
 		const { nodeId } = this.props.data;
 		if (nodeId) {
