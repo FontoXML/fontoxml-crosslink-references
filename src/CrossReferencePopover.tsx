@@ -6,6 +6,9 @@ import operationsManager from 'fontoxml-operations/src/operationsManager';
 import CrossReferencePopoverBody from './ui/CrossReferencePopoverBody';
 
 type Props = {
+	/**
+	 * @type {CrossReferencePopover~data}
+	 */
 	data: {
 		contextNodeId: string;
 		deleteOperationName?: string;
@@ -15,6 +18,16 @@ type Props = {
 		targetIsPermanentId?: boolean;
 		targetQuery: string;
 	};
+	/**
+	 * This callback will be triggered when the popover is opened or after the permanent id is
+	 * resolved (if the reference has permanent ids `data.targetIsPermanentId`).
+	 *
+	 * @param {string} target The unresolved target, this is the resolved permanent id or
+	 *    the outcome of `data.targetQuery`.
+	 *
+	 * @return {Promise.<CrossReferencePopover~returnObject>} The resolved target. This
+	 *    should be a promise that resolves into an object.
+	 */
 	resolveReference(...args: unknown[]): unknown;
 };
 
