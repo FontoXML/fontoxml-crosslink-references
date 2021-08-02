@@ -14,6 +14,7 @@ import documentsManager from 'fontoxml-documents/src/documentsManager';
 import nodeHighlightManager from 'fontoxml-focus-highlight-view/src/nodeHighlightManager';
 import FxNodePreview from 'fontoxml-fx/src/FxNodePreview';
 import FxXPath, { XPATH_RETURN_TYPES } from 'fontoxml-fx/src/FxXPath';
+import type { ModalProps } from 'fontoxml-fx/src/types';
 import t from 'fontoxml-localization/src/t';
 import operationsManager from 'fontoxml-operations/src/operationsManager';
 import scrollIntoViewManager from 'fontoxml-scroll-into-view/src/scrollIntoViewManager';
@@ -21,19 +22,16 @@ import scrollIntoViewManager from 'fontoxml-scroll-into-view/src/scrollIntoViewM
 const modalTitleDefault = t('Preview link');
 const closeButtonLabel = t('Close');
 
-type Props = {
-	cancelModal(...args: unknown[]): unknown;
-	data: {
+class DocumentPreviewModal extends Component<
+	ModalProps<{
 		documentId: string;
 		modalIcon?: string;
 		modalTitle?: string;
 		nodeId?: string;
 		editReferenceOperationName?: string;
 		editReferenceNodeId?: string;
-	};
-};
-
-class DocumentPreviewModal extends Component<Props> {
+	}>
+> {
 	componentDidMount() {
 		const { nodeId } = this.props.data;
 		if (nodeId) {
