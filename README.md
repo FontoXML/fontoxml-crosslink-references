@@ -1,5 +1,6 @@
 ---
 category: add-on/fontoxml-crosslink-references
+fontosdk: true
 ---
 
 # Cross references library
