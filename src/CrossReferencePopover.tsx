@@ -1,11 +1,22 @@
-import React, { useCallback } from 'react';
+import * as React from 'react';
+import { useCallback } from 'react';
 
 import FxReferencePopover from 'fontoxml-fx/src/FxReferencePopover';
 import operationsManager from 'fontoxml-operations/src/operationsManager';
 
 import CrossReferencePopoverBody from './ui/CrossReferencePopoverBody';
 
-type Props = {
+/**
+ * A component used for making a popover for cross references.
+ *
+ * The CrossReferencePopover completely implements {@link FxReferencePopover} for cross referencing.
+ * The only property that still needs to be added is the `resolveReference` property.
+ *
+ * @fontosdk
+ * @react
+ * @category add-on/fontoxml-crosslink-references
+ */
+const CrossReferencePopover: React.FunctionComponent<{
 	/**
 	 * @type {CrossReferencePopover~data}
 	 *
@@ -54,19 +65,7 @@ type Props = {
 	 * @fontosdk
 	 */
 	resolveReference(...args: unknown[]): unknown;
-};
-
-/**
- * A component used for making a popover for cross references.
- *
- * The CrossReferencePopover completely implements {@link FxReferencePopover} for cross referencing.
- * The only property that still needs to be added is the `resolveReference` property.
- *
- * @fontosdk
- * @react
- * @category add-on/fontoxml-crosslink-references
- */
-function CrossReferencePopover({ data, ...props }: Props) {
+}> = ({ data, ...props }) => {
 	const renderReference = useCallback(
 		({ openPreview, reference }) => {
 			return (
@@ -113,7 +112,7 @@ function CrossReferencePopover({ data, ...props }: Props) {
 			renderReference={renderReference}
 		/>
 	);
-}
+};
 
 CrossReferencePopover.displayName = 'CrossReferencePopover';
 
