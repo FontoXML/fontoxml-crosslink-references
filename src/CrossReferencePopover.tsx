@@ -8,14 +8,37 @@ import CrossReferencePopoverBody from './ui/CrossReferencePopoverBody';
 type Props = {
 	/**
 	 * @type {CrossReferencePopover~data}
+	 *
+	 * @fontosdk
 	 */
 	data: {
+		/**
+		 * @fontosdk
+		 */
 		contextNodeId: string;
+		/**
+		 * @fontosdk
+		 */
 		deleteOperationName?: string;
+		/**
+		 * @fontosdk
+		 */
 		editOperationName?: string;
+		/**
+		 * @fontosdk
+		 */
 		isReadOnly?: boolean;
+		/**
+		 * @fontosdk
+		 */
 		referenceMarkupLabel?: string;
+		/**
+		 * @fontosdk
+		 */
 		targetIsPermanentId?: boolean;
+		/**
+		 * @fontosdk
+		 */
 		targetQuery: string;
 	};
 	/**
@@ -27,6 +50,8 @@ type Props = {
 	 *
 	 * @return {Promise.<CrossReferencePopover~returnObject>} The resolved target. This
 	 *    should be a promise that resolves into an object.
+	 *
+	 * @fontosdk
 	 */
 	resolveReference(...args: unknown[]): unknown;
 };
