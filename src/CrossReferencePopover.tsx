@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { useCallback } from 'react';
 
+import type { DocumentId } from 'fontoxml-documents/src/types';
+import type { NodeId } from 'fontoxml-dom-identification/src/types';
 import FxReferencePopover from 'fontoxml-fx/src/FxReferencePopover';
 import operationsManager from 'fontoxml-operations/src/operationsManager';
 
@@ -18,20 +20,31 @@ import CrossReferencePopoverBody from './ui/CrossReferencePopoverBody';
  */
 const CrossReferencePopover: React.FunctionComponent<{
 	/**
+	 * The popoverData as provided by the family configuration, this only needs to be passed through.
+	 *
 	 * @type {CrossReferencePopover~data}
 	 *
 	 * @fontosdk
 	 */
 	data: {
 		/**
+		 * A property that comes from the popover method
+		 *   self, contains the node ID of the node that is configured.
+		 *
 		 * @fontosdk
 		 */
 		contextNodeId: string;
 		/**
+		 * The operation for removing the
+		 *   reference. Is by default {@link reference-delete}.
+		 *
 		 * @fontosdk
 		 */
 		deleteOperationName?: string;
 		/**
+		 * Only when an editOperationName is used, a edit
+		 *   button is made. The edit operation should provide a way to edit the reference.
+		 *
 		 * @fontosdk
 		 */
 		editOperationName?: string;
@@ -40,14 +53,24 @@ const CrossReferencePopover: React.FunctionComponent<{
 		 */
 		isReadOnly?: boolean;
 		/**
+		 * Provide an alternative label for this
+		 *   reference, provided as REFERENCE_MARKUP_LABEL to the MessageFormat for the popover's description.
+		 *   If omitted, the configured markup label for the reference node is used instead.
+		 *
 		 * @fontosdk
 		 */
 		referenceMarkupLabel?: string;
 		/**
+		 * Determines wether the reference contains
+		 *   permanentId's.
+		 *
 		 * @fontosdk
 		 */
 		targetIsPermanentId?: boolean;
 		/**
+		 * Determines the reference content with a xpath
+		 *   query, starting from the context node. Often this is just an attribute, for example `@href`.
+		 *
 		 * @fontosdk
 		 */
 		targetQuery: string;
@@ -64,7 +87,20 @@ const CrossReferencePopover: React.FunctionComponent<{
 	 *
 	 * @fontosdk
 	 */
-	resolveReference(...args: unknown[]): unknown;
+	resolveReference(target: string): Promise<{
+		/**
+		 * The document ID of the document that is referenced
+		 *
+		 * @fontosdk
+		 */
+		documentId: DocumentId;
+		/**
+		 * The node ID of the node that is referenced
+		 *
+		 * @fontosdk
+		 */
+		nodeId?: NodeId;
+	}>;
 }> = ({ data, ...props }) => {
 	const renderReference = useCallback(
 		({ openPreview, reference }) => {
