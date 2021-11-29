@@ -14,7 +14,7 @@ import CrossReferencePopoverBody from './ui/CrossReferencePopoverBody';
  * The CrossReferencePopover completely implements {@link FxReferencePopover} for cross referencing.
  * The only property that still needs to be added is the `resolveReference` property.
  *
- * @fontosdk
+ * @fontosdk importable
  * @react
  * @category add-on/fontoxml-crosslink-references
  */
