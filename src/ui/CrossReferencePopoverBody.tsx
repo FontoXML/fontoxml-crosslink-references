@@ -4,6 +4,7 @@ import React from 'react';
 import documentsManager from 'fontoxml-documents/src/documentsManager';
 import useXPath, { XPATH_RETURN_TYPES } from 'fontoxml-fx/src/useXPath';
 import t from 'fontoxml-localization/src/t';
+import xq from 'fontoxml-selectors/src/xq';
 
 const TEXT_CONTENT_TRUNCATE_LENGTH = 140;
 
@@ -20,13 +21,13 @@ function useReferenceTextLabels(
 		: documentsManager.getDocumentNode(reference.target.documentId)
 				.documentElement;
 
-	const targetMarkupLabel = useXPath('fonto:markup-label(.)', targetNode, {
+	const targetMarkupLabel = useXPath(xq`fonto:markup-label(.)`, targetNode, {
 		expectedResultType: XPATH_RETURN_TYPES.STRING_TYPE,
 	});
 
 	const referenceNode = documentsManager.getNodeById(contextNodeId);
 	const referenceMarkupLabelFallback = useXPath(
-		'fonto:markup-label(.)',
+		xq`fonto:markup-label(.)`,
 		referenceNode,
 		{
 			expectedResultType: XPATH_RETURN_TYPES.STRING_TYPE,
@@ -39,14 +40,14 @@ function useReferenceTextLabels(
 	let titleContent = reference.metadata && reference.metadata.title;
 	const titleContentFallback = useXPath(
 		!titleContent &&
-			`
+			xq`
 				import module namespace fonto = "http://www.fontoxml.com/functions";
-				let $titleContent := fonto:title-content(.) 
-				return 
-					if ($titleContent) 
-					then 
-						$titleContent 
-					else 
+				let $titleContent := fonto:title-content(.)
+				return
+					if ($titleContent)
+					then
+						$titleContent
+					else
 						fonto:curated-text-in-node(.)
 			`,
 		targetNode,
