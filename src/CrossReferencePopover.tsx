@@ -161,15 +161,3 @@ const CrossReferencePopover: React.FunctionComponent<{
 CrossReferencePopover.displayName = 'CrossReferencePopover';
 
 export default CrossReferencePopover;
-
-/**
- * @fontosdk
- */
-
-/**
- * @remarks
- * The popoverData as provided by the family configuration, this only needs to be
- * passed through.
- *
- * @fontosdk
- */
