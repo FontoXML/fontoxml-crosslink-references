@@ -8,21 +8,24 @@ import {
 	ModalHeader,
 	TextLink,
 } from 'fds/components';
-import React, { Component } from 'react';
+import type { FC } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 
 import documentsManager from 'fontoxml-documents/src/documentsManager';
 import nodeHighlightManager from 'fontoxml-focus-highlight-view/src/nodeHighlightManager';
 import FxNodePreview from 'fontoxml-fx/src/FxNodePreview';
-import FxXPath, { XPATH_RETURN_TYPES } from 'fontoxml-fx/src/FxXPath';
 import type { ModalProps } from 'fontoxml-fx/src/types';
+import useXPath from 'fontoxml-fx/src/useXPath';
 import t from 'fontoxml-localization/src/t';
 import operationsManager from 'fontoxml-operations/src/operationsManager';
 import scrollIntoViewManager from 'fontoxml-scroll-into-view/src/scrollIntoViewManager';
+import ReturnTypes from 'fontoxml-selectors/src/ReturnTypes';
+import xq from 'fontoxml-selectors/src/xq';
 
 const modalTitleDefault = t('Preview link');
 const closeButtonLabel = t('Close');
 
-class DocumentPreviewModal extends Component<
+const DocumentPreviewModal: FC<
 	ModalProps<{
 		documentId: string;
 		modalIcon?: string;
@@ -31,9 +34,9 @@ class DocumentPreviewModal extends Component<
 		editReferenceOperationName?: string;
 		editReferenceNodeId?: string;
 	}>
-> {
-	componentDidMount() {
-		const { nodeId } = this.props.data;
+> = ({ data, cancelModal }) => {
+	useEffect(() => {
+		const { nodeId } = data;
 		if (nodeId) {
 			nodeHighlightManager.setHighlight('target-element', nodeId);
 
@@ -46,13 +49,19 @@ class DocumentPreviewModal extends Component<
 				}
 			);
 		}
-	}
 
-	handleReplaceButton = () => {
-		this.props.cancelModal();
+		return () => {
+			const { nodeId } = data;
+			if (nodeId) {
+				nodeHighlightManager.setHighlight('target-element', null);
+			}
+		};
+	}, [data]);
 
-		const { editReferenceOperationName, editReferenceNodeId } =
-			this.props.data;
+	const handleReplaceButton = useCallback(() => {
+		cancelModal();
+
+		const { editReferenceOperationName, editReferenceNodeId } = data;
 		operationsManager
 			.executeOperation(editReferenceOperationName, {
 				contextNodeId: editReferenceNodeId,
@@ -67,7 +76,7 @@ class DocumentPreviewModal extends Component<
 					editReferenceOperationName,
 					// eslint-disable-next-line no-shadow
 					editReferenceNodeId,
-				} = this.props.data;
+				} = data;
 
 				operationsManager
 					.executeOperation('open-document-preview-modal', {
@@ -78,83 +87,71 @@ class DocumentPreviewModal extends Component<
 						editReferenceOperationName,
 						editReferenceNodeId,
 					})
-					.catch(() => {});
+					.catch(() => ({}));
 			});
-	};
+	}, [cancelModal, data]);
 
-	handleKeyDown = (event) => {
-		if (event.key === 'Escape' || event.key === 'Enter') {
-			this.props.cancelModal();
-		}
-	};
+	const handleKeyDown = useCallback(
+		(event) => {
+			if (event.key === 'Escape' || event.key === 'Enter') {
+				cancelModal();
+			}
+		},
+		[cancelModal]
+	);
 
-	render() {
-		const {
-			cancelModal,
-			data: {
-				documentId,
-				modalIcon,
-				modalTitle,
-				editReferenceOperationName,
-				editReferenceNodeId,
-			},
-		} = this.props;
+	const {
+		documentId,
+		modalIcon,
+		modalTitle,
+		editReferenceOperationName,
+		editReferenceNodeId,
+	} = data;
 
-		// Only show "Edit reference" link if the two props are set and the reference node is  not
-		// read-only
-		const referenceNode =
+	// Only show "Edit reference" link if the two props are set and the
+	// reference node is not read-only.
+	const referenceNode = useMemo(
+		() =>
 			editReferenceOperationName &&
 			editReferenceNodeId &&
-			documentsManager.getNodeById(editReferenceNodeId);
+			documentsManager.getNodeById(editReferenceNodeId),
+		[editReferenceNodeId, editReferenceOperationName]
+	);
 
-		return (
-			<Modal size="m" onKeyDown={this.handleKeyDown}>
-				<ModalHeader
-					title={modalTitle || modalTitleDefault}
-					icon={modalIcon || ''}
+	const isReadOnly = useXPath(xq`fonto:is-node-read-only(.)`, referenceNode, {
+		expectedResultType: ReturnTypes.BOOLEAN,
+	});
+
+	return (
+		<Modal size="m" onKeyDown={handleKeyDown}>
+			<ModalHeader
+				title={modalTitle || modalTitleDefault}
+				icon={modalIcon || ''}
+			/>
+
+			<ModalBody>
+				<ModalContent flexDirection="column" isScrollContainer>
+					<FxNodePreview documentId={documentId} />
+				</ModalContent>
+				{referenceNode && !isReadOnly && (
+					<Flex applyCss={{ marginTop: '1em' }}>
+						<TextLink
+							label={t('Edit reference')}
+							onClick={handleReplaceButton}
+						/>
+					</Flex>
+				)}
+			</ModalBody>
+
+			<ModalFooter>
+				<Button
+					label={closeButtonLabel}
+					type="primary"
+					onClick={cancelModal}
 				/>
-
-				<ModalBody>
-					<ModalContent flexDirection="column" isScrollContainer>
-						<FxNodePreview documentId={documentId} />
-					</ModalContent>
-					{referenceNode && (
-						<FxXPath
-							expression="fonto:is-node-read-only(.)"
-							context={referenceNode}
-							returnType={XPATH_RETURN_TYPES.BOOLEAN_TYPE}
-						>
-							{(isReadOnly) =>
-								!isReadOnly && (
-									<Flex applyCss={{ marginTop: '1em' }}>
-										<TextLink
-											label={t('Edit reference')}
-											onClick={this.handleReplaceButton}
-										/>
-									</Flex>
-								)
-							}
-						</FxXPath>
-					)}
-				</ModalBody>
-
-				<ModalFooter>
-					<Button
-						label={closeButtonLabel}
-						type="primary"
-						onClick={cancelModal}
-					/>
-				</ModalFooter>
-			</Modal>
-		);
-	}
-
-	componentWillUnmount() {
-		const { nodeId } = this.props.data;
-		if (nodeId) {
-			nodeHighlightManager.setHighlight('target-element', null);
-		}
-	}
-}
+			</ModalFooter>
+		</Modal>
+	);
+};
 
 export default DocumentPreviewModal;
