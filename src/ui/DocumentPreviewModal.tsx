@@ -118,9 +118,13 @@ const DocumentPreviewModal: FC<
 		[editReferenceNodeId, editReferenceOperationName]
 	);
 
-	const isReadOnly = useXPath(xq`fonto:is-node-read-only(.)`, referenceNode, {
-		expectedResultType: ReturnTypes.BOOLEAN,
-	});
+	const isReadOnly = useXPath(
+		referenceNode ? xq`fonto:is-node-read-only(.)` : xq`false()`,
+		referenceNode,
+		{
+			expectedResultType: ReturnTypes.BOOLEAN,
+		}
+	);
 
 	return (
 		<Modal size="m" onKeyDown={handleKeyDown}>
