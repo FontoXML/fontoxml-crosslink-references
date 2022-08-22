@@ -2,8 +2,9 @@ import { PopoverBody, Text, TextLink } from 'fds/components';
 import React from 'react';
 
 import documentsManager from 'fontoxml-documents/src/documentsManager';
-import useXPath, { XPATH_RETURN_TYPES } from 'fontoxml-fx/src/useXPath';
+import useXPath from 'fontoxml-fx/src/useXPath';
 import t from 'fontoxml-localization/src/t';
+import ReturnTypes from 'fontoxml-selectors/src/ReturnTypes';
 import xq from 'fontoxml-selectors/src/xq';
 
 const TEXT_CONTENT_TRUNCATE_LENGTH = 140;
@@ -22,7 +23,7 @@ function useReferenceTextLabels(
 				.documentElement;
 
 	const targetMarkupLabel = useXPath(xq`fonto:markup-label(.)`, targetNode, {
-		expectedResultType: XPATH_RETURN_TYPES.STRING_TYPE,
+		expectedResultType: ReturnTypes.STRING,
 	});
 
 	const referenceNode = documentsManager.getNodeById(contextNodeId);
@@ -30,7 +31,7 @@ function useReferenceTextLabels(
 		xq`fonto:markup-label(.)`,
 		referenceNode,
 		{
-			expectedResultType: XPATH_RETURN_TYPES.STRING_TYPE,
+			expectedResultType: ReturnTypes.STRING,
 		}
 	);
 	if (!referenceMarkupLabel) {
@@ -51,7 +52,7 @@ function useReferenceTextLabels(
 						fonto:curated-text-in-node(.)
 			`,
 		targetNode,
-		{ expectedResultType: XPATH_RETURN_TYPES.STRING_TYPE }
+		{ expectedResultType: ReturnTypes.STRING }
 	);
 	if (!titleContent) {
 		titleContent = titleContentFallback;
