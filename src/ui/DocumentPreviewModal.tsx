@@ -1,3 +1,5 @@
+import * as React from 'react';
+
 import {
 	Button,
 	Flex,
@@ -7,10 +9,7 @@ import {
 	ModalFooter,
 	ModalHeader,
 	TextLink,
-} from 'fds/components';
-import type { FC } from 'react';
-import React, { useCallback, useEffect, useMemo } from 'react';
-
+} from 'fontoxml-design-system/src/components';
 import documentsManager from 'fontoxml-documents/src/documentsManager';
 import nodeHighlightManager from 'fontoxml-focus-highlight-view/src/nodeHighlightManager';
 import FxNodePreview from 'fontoxml-fx/src/FxNodePreview';
@@ -25,29 +24,32 @@ import xq from 'fontoxml-selectors/src/xq';
 const modalTitleDefault = t('Preview link');
 const closeButtonLabel = t('Close');
 
-const DocumentPreviewModal: FC<
-	ModalProps<{
-		documentId: string;
-		modalIcon?: string;
-		modalTitle?: string;
-		nodeId?: string;
-		editReferenceOperationName?: string;
-		editReferenceNodeId?: string;
-	}>
-> = ({ data, cancelModal }) => {
-	useEffect(() => {
+type Props = ModalProps<{
+	documentId: string;
+	modalIcon?: string;
+	modalTitle?: string;
+	nodeId?: string;
+	editReferenceOperationName?: string;
+	editReferenceNodeId?: string;
+}>;
+
+const DocumentPreviewModal: React.FC<Props> = ({ data, cancelModal }) => {
+	React.useEffect(() => {
 		const { nodeId } = data;
 		if (nodeId) {
 			nodeHighlightManager.setHighlight('target-element', nodeId);
 
-			scrollIntoViewManager.scrollSourceNodeIntoView(
-				'content-preview',
-				documentsManager.getNodeById(nodeId),
-				{
-					alignTo: 'center',
-					forceScroll: true,
-				}
-			);
+			const node = documentsManager.getNodeById(nodeId);
+			if (node) {
+				scrollIntoViewManager.scrollSourceNodeIntoView(
+					'content-preview',
+					node,
+					{
+						alignTo: 'center',
+						forceScroll: true,
+					}
+				);
+			}
 		}
 
 		return () => {
@@ -58,12 +60,12 @@ const DocumentPreviewModal: FC<
 		};
 	}, [data]);
 
-	const handleReplaceButton = useCallback(() => {
+	const handleReplaceButton = React.useCallback(() => {
 		cancelModal();
 
 		const { editReferenceOperationName, editReferenceNodeId } = data;
 		operationsManager
-			.executeOperation(editReferenceOperationName, {
+			.executeOperation(editReferenceOperationName!, {
 				contextNodeId: editReferenceNodeId,
 			})
 			.catch(() => {
@@ -91,7 +93,7 @@ const DocumentPreviewModal: FC<
 			});
 	}, [cancelModal, data]);
 
-	const handleKeyDown = useCallback(
+	const handleKeyDown = React.useCallback<React.KeyboardEventHandler>(
 		(event) => {
 			if (event.key === 'Escape' || event.key === 'Enter') {
 				cancelModal();
@@ -110,7 +112,7 @@ const DocumentPreviewModal: FC<
 
 	// Only show "Edit reference" link if the two props are set and the
 	// reference node is not read-only.
-	const referenceNode = useMemo(
+	const referenceNode = React.useMemo(
 		() =>
 			editReferenceOperationName &&
 			editReferenceNodeId &&
@@ -120,10 +122,8 @@ const DocumentPreviewModal: FC<
 
 	const isReadOnly = useXPath(
 		referenceNode ? xq`fonto:is-node-read-only(.)` : xq`false()`,
-		referenceNode,
-		{
-			expectedResultType: ReturnTypes.BOOLEAN,
-		}
+		referenceNode || null,
+		{ expectedResultType: ReturnTypes.BOOLEAN }
 	);
 
 	return (
@@ -137,6 +137,7 @@ const DocumentPreviewModal: FC<
 				<ModalContent flexDirection="column" isScrollContainer>
 					<FxNodePreview documentId={documentId} />
 				</ModalContent>
+
 				{referenceNode && !isReadOnly && (
 					<Flex applyCss={{ marginTop: '1em' }}>
 						<TextLink

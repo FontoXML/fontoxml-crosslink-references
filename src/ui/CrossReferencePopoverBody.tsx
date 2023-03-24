@@ -1,7 +1,12 @@
-import { PopoverBody, Text, TextLink } from 'fds/components';
-import React from 'react';
+import * as React from 'react';
 
+import {
+	PopoverBody,
+	Text,
+	TextLink,
+} from 'fontoxml-design-system/src/components';
 import documentsManager from 'fontoxml-documents/src/documentsManager';
+import type { NodeId } from 'fontoxml-dom-identification/src/types';
 import useXPath from 'fontoxml-fx/src/useXPath';
 import t from 'fontoxml-localization/src/t';
 import ReturnTypes from 'fontoxml-selectors/src/ReturnTypes';
@@ -13,9 +18,9 @@ const showMoreLabel = t('Show more');
 const showPreviewLabel = t('Show preview');
 
 function useReferenceTextLabels(
-	contextNodeId,
-	reference,
-	referenceMarkupLabel
+	contextNodeId: NodeId,
+	reference: $TSFixMeAny,
+	referenceMarkupLabel: string
 ) {
 	const targetNode = reference.target.nodeId
 		? documentsManager.getNodeById(reference.target.nodeId)
@@ -40,8 +45,8 @@ function useReferenceTextLabels(
 
 	let titleContent = reference.metadata && reference.metadata.title;
 	const titleContentFallback = useXPath(
-		!titleContent &&
-			xq`
+		!titleContent
+			? xq`
 				import module namespace fonto = "http://www.fontoxml.com/functions";
 				let $titleContent := fonto:title-content(.)
 				return
@@ -50,7 +55,8 @@ function useReferenceTextLabels(
 						$titleContent
 					else
 						fonto:curated-text-in-node(.)
-			`,
+			`
+			: null,
 		targetNode,
 		{ expectedResultType: ReturnTypes.STRING }
 	);
@@ -87,12 +93,19 @@ function useReferenceTextLabels(
 	};
 }
 
-function CrossReferencePopoverBody({
+type Props = {
+	contextNodeId: NodeId;
+	openPreview(): void;
+	reference: $TSFixMeAny;
+	referenceMarkupLabel: string;
+};
+
+const CrossReferencePopoverBody: React.FC<Props> = ({
 	contextNodeId,
 	openPreview,
 	reference,
 	referenceMarkupLabel,
-}) {
+}) => {
 	const referenceTextLabels = useReferenceTextLabels(
 		contextNodeId,
 		reference,
@@ -122,6 +135,6 @@ function CrossReferencePopoverBody({
 			</Text>
 		</PopoverBody>
 	);
-}
+};
 
 export default CrossReferencePopoverBody;
