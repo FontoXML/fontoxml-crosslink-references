@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type { FC } from 'react';
 
 import {
 	PopoverBody,
@@ -100,7 +100,7 @@ type Props = {
 	referenceMarkupLabel: string;
 };
 
-const CrossReferencePopoverBody: React.FC<Props> = ({
+const CrossReferencePopoverBody: FC<Props> = ({
 	contextNodeId,
 	openPreview,
 	reference,

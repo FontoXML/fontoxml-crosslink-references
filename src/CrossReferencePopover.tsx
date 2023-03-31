@@ -1,4 +1,5 @@
-import * as React from 'react';
+import type { FC } from 'react';
+import { useCallback } from 'react';
 
 import type { DocumentId } from 'fontoxml-documents/src/types';
 import type { NodeId } from 'fontoxml-dom-identification/src/types';
@@ -17,7 +18,7 @@ import CrossReferencePopoverBody from './ui/CrossReferencePopoverBody';
  *
  * @fontosdk importable
  */
-const CrossReferencePopover: React.FC<{
+const CrossReferencePopover: FC<{
 	/**
 	 * @remarks
 	 * The popoverData as provided by the family configuration, this only needs to be
@@ -109,7 +110,7 @@ const CrossReferencePopover: React.FC<{
 		nodeId?: NodeId;
 	}>;
 }> = ({ data, ...props }) => {
-	const renderReference = React.useCallback(
+	const renderReference = useCallback(
 		({ openPreview, reference }) => {
 			return (
 				<CrossReferencePopoverBody
@@ -123,7 +124,7 @@ const CrossReferencePopover: React.FC<{
 		[data.contextNodeId, data.referenceMarkupLabel]
 	);
 
-	const handleOpenPreview = React.useCallback(
+	const handleOpenPreview = useCallback(
 		({ target }) => {
 			// The reference can only be edited from the preview modal if we have its node ID, an
 			// edit operation, and are not in any way read-only. The modal does check whether the

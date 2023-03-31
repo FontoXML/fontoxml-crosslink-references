@@ -1,4 +1,5 @@
-import * as React from 'react';
+import type { FC, KeyboardEventHandler } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 
 import {
 	Button,
@@ -33,8 +34,8 @@ type Props = ModalProps<{
 	editReferenceNodeId?: string;
 }>;
 
-const DocumentPreviewModal: React.FC<Props> = ({ data, cancelModal }) => {
-	React.useEffect(() => {
+const DocumentPreviewModal: FC<Props> = ({ data, cancelModal }) => {
+	useEffect(() => {
 		const { nodeId } = data;
 		if (nodeId) {
 			nodeHighlightManager.setHighlight('target-element', nodeId);
@@ -60,12 +61,12 @@ const DocumentPreviewModal: React.FC<Props> = ({ data, cancelModal }) => {
 		};
 	}, [data]);
 
-	const handleReplaceButton = React.useCallback(() => {
+	const handleReplaceButton = useCallback(() => {
 		cancelModal();
 
 		const { editReferenceOperationName, editReferenceNodeId } = data;
 		operationsManager
-			.executeOperation(editReferenceOperationName!, {
+			.executeOperation(editReferenceOperationName, {
 				contextNodeId: editReferenceNodeId,
 			})
 			.catch(() => {
@@ -93,7 +94,7 @@ const DocumentPreviewModal: React.FC<Props> = ({ data, cancelModal }) => {
 			});
 	}, [cancelModal, data]);
 
-	const handleKeyDown = React.useCallback<React.KeyboardEventHandler>(
+	const handleKeyDown = useCallback<KeyboardEventHandler>(
 		(event) => {
 			if (event.key === 'Escape' || event.key === 'Enter') {
 				cancelModal();
@@ -112,7 +113,7 @@ const DocumentPreviewModal: React.FC<Props> = ({ data, cancelModal }) => {
 
 	// Only show "Edit reference" link if the two props are set and the
 	// reference node is not read-only.
-	const referenceNode = React.useMemo(
+	const referenceNode = useMemo(
 		() =>
 			editReferenceOperationName &&
 			editReferenceNodeId &&
