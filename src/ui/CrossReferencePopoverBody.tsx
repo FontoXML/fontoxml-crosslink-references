@@ -1,115 +1,129 @@
 import type { FC } from 'react';
+import { useCallback, useMemo } from 'react';
 
+import blueprintQuery from 'fontoxml-blueprints/src/blueprintQuery';
+import readOnlyBlueprint from 'fontoxml-blueprints/src/readOnlyBlueprint';
 import {
 	PopoverBody,
 	Text,
 	TextLink,
 } from 'fontoxml-design-system/src/components';
 import documentsManager from 'fontoxml-documents/src/documentsManager';
+import type { DocumentId } from 'fontoxml-documents/src/types';
 import type { NodeId } from 'fontoxml-dom-identification/src/types';
+import domInfo from 'fontoxml-dom-utils/src/domInfo';
+import useOperation from 'fontoxml-fx/src/useOperation';
 import useXPath from 'fontoxml-fx/src/useXPath';
 import t from 'fontoxml-localization/src/t';
+import type { OperationName } from 'fontoxml-operations/src/types';
 import ReturnTypes from 'fontoxml-selectors/src/ReturnTypes';
 import xq from 'fontoxml-selectors/src/xq';
 
 const TEXT_CONTENT_TRUNCATE_LENGTH = 140;
 
-const showMoreLabel = t('Show more');
-const showPreviewLabel = t('Show preview');
+const CrossReferencePopoverBody: FC<{
+	contextNodeId: NodeId;
+	targetDocumentId: DocumentId;
+	targetNodeId?: NodeId;
+	editOperationName?: OperationName;
+	referenceMarkupLabel?: string;
+	titleContent?: string;
+}> = ({
+	contextNodeId,
+	targetDocumentId,
+	targetNodeId,
+	editOperationName,
+	referenceMarkupLabel,
+	titleContent,
+}) => {
+	const contextNode = useMemo(
+		() => documentsManager.getNodeById(contextNodeId),
+		[contextNodeId]
+	);
+	const referenceMarkupLabelFallback = useXPath(
+		referenceMarkupLabel ? null : xq`fonto:markup-label(.)`,
+		contextNode,
+		{ expectedResultType: ReturnTypes.STRING }
+	);
 
-function useReferenceTextLabels(
-	contextNodeId: NodeId,
-	reference: $TSFixMeAny,
-	referenceMarkupLabel: string
-) {
-	const targetNode = reference.target.nodeId
-		? documentsManager.getNodeById(reference.target.nodeId)
-		: documentsManager.getDocumentNode(reference.target.documentId)
-				.documentElement;
+	const targetNode = useMemo(() => {
+		if (targetNodeId) {
+			return documentsManager.getNodeById(targetNodeId);
+		}
+		const documentNode = documentsManager.getDocumentNode(targetDocumentId);
+		// Get the root element of the target document
+		return (
+			documentNode &&
+			blueprintQuery.findChild(
+				readOnlyBlueprint,
+				documentNode,
+				domInfo.isElement
+			)
+		);
+	}, [targetNodeId, targetDocumentId]);
 
 	const targetMarkupLabel = useXPath(xq`fonto:markup-label(.)`, targetNode, {
 		expectedResultType: ReturnTypes.STRING,
 	});
 
-	const referenceNode = documentsManager.getNodeById(contextNodeId);
-	const referenceMarkupLabelFallback = useXPath(
-		xq`fonto:markup-label(.)`,
-		referenceNode,
-		{
-			expectedResultType: ReturnTypes.STRING,
-		}
-	);
-	if (!referenceMarkupLabel) {
-		referenceMarkupLabel = referenceMarkupLabelFallback;
-	}
-
-	let titleContent = reference.metadata && reference.metadata.title;
-	const titleContentFallback = useXPath(
-		!titleContent
-			? xq`
-				import module namespace fonto = "http://www.fontoxml.com/functions";
-				let $titleContent := fonto:title-content(.)
-				return
-					if ($titleContent)
-					then
-						$titleContent
-					else
-						fonto:curated-text-in-node(.)
-			`
-			: null,
+	const titleContentFallback = useXPath<string>(
+		titleContent
+			? null
+			: xq`let $titleContent := fonto:title-content(.)
+			return if ($titleContent)
+				then $titleContent
+				else fonto:curated-text-in-node(.)
+		`,
 		targetNode,
 		{ expectedResultType: ReturnTypes.STRING }
 	);
-	if (!titleContent) {
-		titleContent = titleContentFallback;
-	}
 
-	titleContent =
-		titleContent.length <= TEXT_CONTENT_TRUNCATE_LENGTH
-			? titleContent
-			: `${titleContent.substr(0, TEXT_CONTENT_TRUNCATE_LENGTH - 1)}…`;
+	const textRepresentation = useMemo(() => {
+		let title = titleContent ?? titleContentFallback ?? '';
+		if (title.length > TEXT_CONTENT_TRUNCATE_LENGTH) {
+			title = `${title.substr(0, TEXT_CONTENT_TRUNCATE_LENGTH - 1)}…`;
+		}
+		if (title) {
+			return t('“{TEXT_REPRESENTATION}”', {
+				TEXT_REPRESENTATION: title,
+			});
+		}
 
-	if (titleContent) {
-		return {
-			targetMarkupLabel,
-			referenceMarkupLabel,
-			previewLabel: showMoreLabel,
-			textRepresentation: t('“{TEXT_REPRESENTATION}”', {
-				TEXT_REPRESENTATION: titleContent,
-			}),
-		};
-	}
+		return t('This {MARKUP_LABEL} does not contain any textual content.', {
+			MARKUP_LABEL: targetMarkupLabel,
+		});
+	}, [targetMarkupLabel, titleContent, titleContentFallback]);
 
-	return {
-		targetMarkupLabel,
-		referenceMarkupLabel,
-		previewLabel: showPreviewLabel,
-		textRepresentation: t(
-			'This {MARKUP_LABEL} does not contain any textual content.',
-			{
-				MARKUP_LABEL: targetMarkupLabel,
-			}
-		),
-	};
-}
+	const previewLabel =
+		titleContent ?? titleContentFallback
+			? t('Show more')
+			: t('Show preview');
 
-type Props = {
-	contextNodeId: NodeId;
-	openPreview(): void;
-	reference: $TSFixMeAny;
-	referenceMarkupLabel: string;
-};
-
-const CrossReferencePopoverBody: FC<Props> = ({
-	contextNodeId,
-	openPreview,
-	reference,
-	referenceMarkupLabel,
-}) => {
-	const referenceTextLabels = useReferenceTextLabels(
-		contextNodeId,
-		reference,
-		referenceMarkupLabel
+	const previewOperationData = useMemo(() => {
+		// The reference can only be edited from the preview modal if we
+		// have its node ID, an edit operation, and are not in any way
+		// read-only. The modal does check whether the reference node is
+		// read-only, but data.isReadOnly may also indicate that this
+		// popover was opened from a preview...
+		return editOperationName
+			? {
+					documentId: targetDocumentId,
+					nodeId: targetNodeId,
+					editReferenceOperationName: editOperationName,
+					editReferenceNodeId: contextNodeId,
+			  }
+			: {
+					documentId: targetDocumentId,
+					nodeId: targetNodeId,
+			  };
+	}, [editOperationName, targetDocumentId, targetNodeId, contextNodeId]);
+	const { executeOperation } = useOperation(
+		'open-document-preview-modal',
+		previewOperationData
+	);
+	const openPreview = useCallback(
+		() => executeOperation(),
+		[executeOperation]
 	);
 
 	return (
@@ -119,19 +133,16 @@ const CrossReferencePopoverBody: FC<Props> = ({
 					'{REFERENCE_MARKUP_LABEL, fonto_upper_case_first_letter} to the {REFERENCE_TARGET_MARKUP_LABEL}:',
 					{
 						REFERENCE_MARKUP_LABEL:
-							referenceTextLabels.referenceMarkupLabel,
-						REFERENCE_TARGET_MARKUP_LABEL:
-							referenceTextLabels.targetMarkupLabel,
+							referenceMarkupLabel ??
+							referenceMarkupLabelFallback,
+						REFERENCE_TARGET_MARKUP_LABEL: targetMarkupLabel,
 					}
 				)}
 			</Text>
 
 			<Text>
-				{referenceTextLabels.textRepresentation}{' '}
-				<TextLink
-					label={referenceTextLabels.previewLabel}
-					onClick={openPreview}
-				/>
+				{textRepresentation}{' '}
+				<TextLink label={previewLabel} onClick={openPreview} />
 			</Text>
 		</PopoverBody>
 	);
