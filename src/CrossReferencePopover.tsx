@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import {
 	CompactStateMessage,
@@ -15,8 +15,6 @@ import FxOperationButton from 'fontoxml-fx/src/FxOperationButton';
 import useXPath from 'fontoxml-fx/src/useXPath';
 import t from 'fontoxml-localization/src/t';
 import type { OperationName } from 'fontoxml-operations/src/types';
-import referencesManager from 'fontoxml-references/src/referencesManager';
-import type { ReferenceMetadata } from 'fontoxml-references/src/types';
 import ReturnTypes from 'fontoxml-selectors/src/ReturnTypes';
 import type { XPathQuery, XQExpression } from 'fontoxml-selectors/src/types';
 
@@ -82,19 +80,6 @@ export type CrossReferencePopoverData = {
 	 * @fontosdk
 	 */
 	targetQuery: XPathQuery | XQExpression;
-	/**
-	 * @remarks
-	 * Determines wether the result of the targetQuery should be resolved
-	 * through the reference pipeline before it is passed to the
-	 * resolveReference function.
-	 *
-	 * Defaults to false.
-	 *
-	 * @fontosdk
-	 *
-	 * @deprecated the reference pipeline will be removed in 8.10
-	 */
-	targetIsPermanentId?: boolean;
 };
 
 /**
@@ -176,9 +161,7 @@ const CrossReferencePopover: FC<{
 	 *
 	 * @fontosdk
 	 *
-	 * @param target - The result of `data.targetQuery`. If
-	 *                 `data.targetIsPermanentId` is true, this is the result of
-	 *                 resolving that value as a reference permanent ID.
+	 * @param target - The result of `data.targetQuery`.
 	 *
 	 * @returns The resolved target. This should be a promise that resolves into
 	 *          an object containing the DocumentId and optionally NodeId of the
@@ -215,40 +198,17 @@ const CrossReferencePopover: FC<{
 				state: 'resolved';
 				documentId: DocumentId;
 				nodeId?: NodeId;
-				// TODO: can be removed if permanent IDs are not used
-				metadata?: ReferenceMetadata & { title?: string };
 		  }
 		| { state: 'error' }
 		| { state: 'loading' };
 	const [resolvingState, setResolvingState] = useState<ResolvingState>({
 		state: 'loading',
 	});
-	// TODO: can be replaced with directly calling `resolveReference` if
-	//       permanent IDs are not used
-	const resolveTarget = useCallback(
-		async (target: string) => {
-			let metadata: ReferenceMetadata | undefined;
-			if (data.targetIsPermanentId) {
-				const reference = await referencesManager.retrieveSingle(
-					target
-				);
-				target = reference.target;
-				metadata = reference.metadata;
-			}
-			const resolved = await resolveReference(target);
-
-			return {
-				...resolved,
-				metadata,
-			};
-		},
-		[data.targetIsPermanentId, resolveReference]
-	);
 	useEffect(() => {
 		let canceled = false;
 		setResolvingState({ state: 'loading' });
 		if (target) {
-			void resolveTarget(target).then(
+			void resolveReference(target).then(
 				(resolved) => {
 					if (canceled) {
 						return;
@@ -266,7 +226,7 @@ const CrossReferencePopover: FC<{
 		return () => {
 			canceled = true;
 		};
-	}, [resolveTarget, target]);
+	}, [resolveReference, target]);
 
 	const editDeleteOperationData = useMemo(
 		() => ({ contextNodeId: data.contextNodeId }),
