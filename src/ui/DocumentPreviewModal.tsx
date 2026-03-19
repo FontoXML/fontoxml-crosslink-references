@@ -75,9 +75,7 @@ const DocumentPreviewModal: FC<Props> = ({ data, cancelModal }) => {
 					modalIcon,
 					modalTitle,
 					nodeId,
-					// eslint-disable-next-line no-shadow
 					editReferenceOperationName,
-					// eslint-disable-next-line no-shadow
 					editReferenceNodeId,
 				} = data;
 

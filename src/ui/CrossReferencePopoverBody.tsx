@@ -95,7 +95,7 @@ const CrossReferencePopoverBody: FC<{
 	}, [targetMarkupLabel, titleContent, titleContentFallback]);
 
 	const previewLabel =
-		titleContent ?? titleContentFallback
+		(titleContent ?? titleContentFallback)
 			? t('Show more')
 			: t('Show preview');
 
@@ -111,11 +111,11 @@ const CrossReferencePopoverBody: FC<{
 					nodeId: targetNodeId,
 					editReferenceOperationName: editOperationName,
 					editReferenceNodeId: contextNodeId,
-			  }
+				}
 			: {
 					documentId: targetDocumentId,
 					nodeId: targetNodeId,
-			  };
+				};
 	}, [editOperationName, targetDocumentId, targetNodeId, contextNodeId]);
 	const { executeOperation } = useOperation(
 		'open-document-preview-modal',
